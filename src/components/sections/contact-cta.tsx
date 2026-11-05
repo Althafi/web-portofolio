@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
+import { CopyEmailButton } from "@/components/sections/copy-email-button";
 import { mailto, profile } from "@/lib/profile";
 
 export function ContactCta() {
@@ -20,15 +21,7 @@ export function ContactCta() {
                 Kirim email <ArrowRight className="size-4" aria-hidden />
               </a>
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="md"
-              data-copy-email
-              className="border-inverse-fg/80 font-mono text-sm font-normal text-inverse-fg hover:bg-inverse-fg/10 hover:text-inverse-fg dark:hover:bg-inverse-fg/10"
-            >
-              Salin: {profile.email}
-            </Button>
+            <CopyEmailButton />
           </div>
         </div>
       </Container>

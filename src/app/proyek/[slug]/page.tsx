@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProjectCard } from "@/components/project/project-card";
+import { DemoDialog } from "@/components/project/demo-dialog";
 import {
   Gallery,
   MetaGrid,
@@ -70,9 +71,11 @@ export default async function ProjectPage({ params }: PageProps<"/proyek/[slug]"
         </div>
         <div className="flex shrink-0 gap-2.5 lg:mt-9">
           {action?.kind === "demo" && (
-            <Button variant="primary" size="md" data-demo={project.slug}>
-              {action.label} <span aria-hidden>▶</span>
-            </Button>
+            <DemoDialog project={project}>
+              <Button variant="primary" size="md">
+                {action.label} <span aria-hidden>▶</span>
+              </Button>
+            </DemoDialog>
           )}
           {action?.kind === "link" && (
             <Button asChild variant="primary" size="md">

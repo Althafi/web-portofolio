@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/container";
-import { ProjectsExplorer } from "@/components/project/projects-explorer";
+import { Suspense } from "react";
+import {
+  ProjectsExplorer,
+  ProjectsExplorerStatic,
+} from "@/components/project/projects-explorer";
 import { ContactCta } from "@/components/sections/contact-cta";
 import { getAllProjects, getCategoryCounts } from "@/lib/projects";
 
@@ -23,7 +27,9 @@ export default function ProjectsPage() {
           kasusnya.
         </p>
         <div className="mt-[42px]">
-          <ProjectsExplorer projects={projects} counts={counts} />
+          <Suspense fallback={<ProjectsExplorerStatic projects={projects} counts={counts} />}>
+            <ProjectsExplorer projects={projects} counts={counts} />
+          </Suspense>
         </div>
       </Container>
       <ContactCta />

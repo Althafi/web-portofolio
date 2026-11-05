@@ -6,10 +6,12 @@ import { Container } from "@/components/layout/container";
 import { Logo } from "@/components/layout/logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { isActive, navLinks } from "@/components/layout/nav-links";
+import { useCommandMenu } from "@/components/layout/command-menu";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const pathname = usePathname();
+  const commandMenu = useCommandMenu();
 
   return (
     <header className="sticky top-0 z-50 h-16 border-b border-border bg-bg">
@@ -41,7 +43,8 @@ export function Navbar() {
         <div className="flex items-center gap-3 justify-self-end">
           <button
             type="button"
-            data-command-trigger
+            onClick={commandMenu.open}
+            aria-haspopup="dialog"
             aria-label="Cari (⌘K)"
             className="hidden h-9 w-[172px] items-center justify-between rounded-lg border border-border pr-[7px] pl-3 text-sm text-muted transition-colors hover:text-fg sm:flex"
           >

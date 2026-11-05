@@ -1,31 +1,74 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { StatusPill } from "@/components/ui/status-pill";
 import { ProjectThumb } from "@/components/project/project-thumb";
+import { DemoDialog } from "@/components/project/demo-dialog";
 import {
   badgeLabel,
   isReleased,
   primaryAction,
   statusLabels,
+  storeLinks,
   type Project,
 } from "@/lib/project-types";
 import { cn } from "@/lib/utils";
 
 export function ProjectCard({ project, className }: { project: Project; className?: string }) {
-  const action = primaryAction(project);
+  const [flipped, setFlipped] = useState(false);
 
   return (
     <article
-      className={cn(
-        "relative flex h-[436px] flex-col overflow-hidden rounded-2xl border border-border bg-bg",
-        className,
-      )}
+      aria-label={project.title}
+      className={cn("group/card relative h-[436px] [perspective:1400px]", className)}
+    >
+      {/* Tombol flip ditaruh sebelum kedua sisi supaya urutan Tab-nya logis */}
+      <button
+        type="button"
+        aria-pressed={flipped}
+        aria-label={`Balik kartu ${project.title}: ${flipped ? "kembali ke depan" : "lihat angka & sorotan"}`}
+        onClick={() => setFlipped((v) => !v)}
+        className={cn(
+          "absolute z-20 grid size-8 place-items-center rounded-full border text-[15px] font-medium transition-all duration-300",
+          flipped
+            ? "top-6 right-6 border-inverse-fg/20 text-inverse-fg hover:bg-inverse-fg/10"
+            : "top-3 right-3 border-border bg-bg text-fg hover:bg-surface",
+        )}
+      >
+        <span aria-hidden>{flipped ? "↺" : "↻"}</span>
+      </button>
+
+      <div
+        className={cn(
+          "relative h-full transition-transform duration-500 ease-[cubic-bezier(.3,1.3,.5,1)] [transform-style:preserve-3d] motion-reduce:transition-none",
+          flipped && "[transform:rotateY(180deg)]",
+        )}
+      >
+        <CardFront project={project} hidden={flipped} />
+        <CardBack project={project} hidden={!flipped} />
+      </div>
+    </article>
+  );
+}
+
+function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
+  const action = primaryAction(project);
+
+  return (
+    <div
+      inert={hidden}
+      className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-border bg-bg [backface-visibility:hidden]"
     >
       <div className="relative h-[220px] shrink-0 overflow-hidden border-b border-border bg-surface">
         <ProjectThumb project={project} />
         {!isReleased(project) && (
-          <StatusPill className="absolute top-3 left-3">{statusLabels[project.status]}</StatusPill>
+          <StatusPill className="absolute top-3 left-3" pulse>
+            {statusLabels[project.status]}
+          </StatusPill>
         )}
       </div>
 
@@ -54,14 +97,12 @@ export function ProjectCard({ project, className }: { project: Project; classNam
           <span className="sr-only">: {project.title}</span>
         </Link>
         {action?.kind === "demo" && (
-          <button
-            type="button"
-            data-demo={project.slug}
-            className="relative z-10 text-muted transition-colors hover:text-fg"
-          >
-            {action.label} <span aria-hidden>▶</span>
-            <span className="sr-only">: {project.title}</span>
-          </button>
+          <DemoDialog project={project}>
+            <button type="button" className="relative z-10 text-muted transition-colors hover:text-fg">
+              {action.label} <span aria-hidden>▶</span>
+              <span className="sr-only">: {project.title}</span>
+            </button>
+          </DemoDialog>
         )}
         {action?.kind === "link" && (
           <a
@@ -74,6 +115,61 @@ export function ProjectCard({ project, className }: { project: Project; classNam
           </a>
         )}
       </div>
-    </article>
+    </div>
+  );
+}
+
+function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
+  const external = isReleased(project) ? storeLinks(project)[0] : undefined;
+  const secondary =
+    external ?? (project.links.github ? { label: "GitHub", href: project.links.github } : undefined);
+
+  return (
+    <div
+      inert={hidden}
+      className="absolute inset-0 flex flex-col gap-[18px] overflow-hidden rounded-2xl bg-inverse-bg p-6 text-inverse-fg [backface-visibility:hidden] [transform:rotateY(180deg)]"
+    >
+      <p className="flex h-8 items-center pr-10 text-h4">{project.title}</p>
+
+      {project.stats?.length ? (
+        <dl className="grid grid-cols-3 gap-2">
+          {project.stats.slice(0, 3).map((stat) => (
+            <div key={stat.label} className="flex flex-col-reverse gap-0.5 rounded-[10px] bg-inverse-fg/[0.07] p-3">
+              <dt className="text-xs text-inverse-fg/60">{stat.label}</dt>
+              <dd className="text-[22px] leading-tight font-semibold text-accent">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+
+      <div>
+        <p className="font-mono text-[11px] text-inverse-fg/60">SOROTAN</p>
+        <ul className="mt-2.5 space-y-1 text-sm">
+          {project.highlights.slice(0, 3).map((h) => (
+            <li key={h}>{h}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-auto grid grid-cols-2 gap-2">
+        <Button asChild variant="accent" size="md-sm">
+          <Link href={`/proyek/${project.slug}`}>
+            Studi kasus <span aria-hidden>→</span>
+          </Link>
+        </Button>
+        {secondary && (
+          <Button
+            asChild
+            variant="ghost"
+            size="md-sm"
+            className="border-inverse-fg/20 text-inverse-fg hover:bg-inverse-fg/10 hover:text-inverse-fg dark:hover:bg-inverse-fg/10"
+          >
+            <a href={secondary.href} target="_blank" rel="noreferrer">
+              {secondary.label} <span aria-hidden>↗</span>
+            </a>
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }
