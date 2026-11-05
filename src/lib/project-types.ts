@@ -72,6 +72,8 @@ export type Project = {
   headings: { id: string; title: string }[];
 };
 
+export type CategoryCounts = Record<Category | "all", number>;
+
 export const categoryLabels: Record<Category, string> = {
   mobile: "Mobile",
   web: "Web",

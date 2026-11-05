@@ -6,8 +6,11 @@ import {
   slugify,
   statuses,
   type Category,
+  type CategoryCounts,
   type Project,
 } from "@/lib/project-types";
+
+export type { CategoryCounts };
 
 /**
  * Sumber data proyek: file MDX di `src/content/projects/`.
@@ -92,8 +95,6 @@ export function getProjectsByCategory(): Record<Category, Project[]> {
     categories.map((c) => [c, all.filter((p) => p.category === c)]),
   ) as Record<Category, Project[]>;
 }
-
-export type CategoryCounts = Record<Category | "all", number>;
 
 export function getCategoryCounts(): CategoryCounts {
   const all = getAllProjects();
