@@ -1,0 +1,57 @@
+---
+# DATA DUMMY — ganti di Fase 9 (lihat docs/CHECKLIST-DATA.md)
+title: Jalur
+category: mobile
+summary: Jadwal & rute transportasi umum Jabodetabek dengan notifikasi kedatangan real-time.
+tagline: Jadwal dan rute transportasi umum Jabodetabek dalam satu aplikasi, lengkap dengan notifikasi kedatangan.
+stack: [SwiftUI, MapKit, CoreData]
+role: iOS developer
+duration: 6 minggu
+platform: iOS
+year: 2024
+status: prototype
+progress: 30
+featured: false
+order: 3
+links:
+  github: https://github.com/altap/jalur
+demo:
+  video: /videos/jalur.mp4
+  chapters:
+    - { at: 0, label: Mencari rute }
+    - { at: 12, label: Notifikasi kedatangan }
+stats:
+  - { value: "4", label: moda transportasi }
+  - { value: "6 mgg", label: prototipe }
+  - { value: "iOS", label: SwiftUI }
+highlights:
+  - Gabungan KRL, MRT, LRT, dan TransJakarta
+  - Notifikasi saat kendaraan mendekat
+  - Peta rute dengan MapKit
+roadmap:
+  - { label: Riset & desain, state: done }
+  - { label: Prototipe, state: active }
+  - { label: Pengembangan, state: todo }
+showcase:
+  label: KRL berikutnya
+  value: 4 menit
+---
+
+## Masalah
+
+Informasi jadwal transportasi umum Jabodetabek tersebar di banyak aplikasi resmi, sehingga perjalanan lintas moda harus direncanakan manual.
+
+## Solusi
+
+Jalur menggabungkan jadwal beberapa moda ke satu tampilan rute, lalu mengirim notifikasi saat kendaraan berikutnya mendekati halte atau stasiun.
+
+## Fitur utama
+
+- Pencarian rute lintas moda
+- Notifikasi kedatangan kendaraan
+- Peta rute interaktif dengan MapKit
+- Rute favorit tersimpan offline
+
+## Hasil
+
+Prototipe diuji dengan 8 komuter untuk memvalidasi alur pencarian rute. Pengembangan lanjutan menunggu akses data jadwal resmi.

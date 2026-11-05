@@ -1,0 +1,60 @@
+---
+# DATA DUMMY — ganti di Fase 9 (lihat docs/CHECKLIST-DATA.md)
+title: Ritme
+category: mobile
+summary: Habit tracker minimalis dengan streak, pengingat pintar, dan widget layar utama.
+tagline: Habit tracker minimalis — bangun kebiasaan kecil lewat streak, pengingat pintar, dan widget yang selalu terlihat.
+stack: [Kotlin, Jetpack Compose, Room, WorkManager, Glance]
+role: Solo Android developer
+duration: 2 bulan (berjalan)
+platform: Android
+year: 2025
+status: development
+releaseTarget: Q2 2027
+progress: 45
+featured: true
+order: 2
+links:
+  github: https://github.com/altap/ritme
+demo:
+  video: /videos/ritme.mp4
+  chapters:
+    - { at: 0, label: Membuat kebiasaan baru }
+    - { at: 14, label: Streak & kalender }
+    - { at: 27, label: Widget layar utama }
+stats:
+  - { value: "45%", label: progres }
+  - { value: "3", label: widget }
+  - { value: "0 iklan", label: selamanya }
+highlights:
+  - Streak harian dengan kalender panas
+  - Pengingat pintar yang belajar dari jadwal
+  - Widget layar utama dengan Glance
+roadmap:
+  - { label: Desain UI, state: done }
+  - { label: Pengembangan, state: active }
+  - { label: Uji beta, state: todo }
+  - { label: Rilis di Play Store, state: todo }
+showcase:
+  label: Streak terpanjang
+  value: 42 hari
+---
+
+## Masalah
+
+Aplikasi habit tracker populer terlalu ramai: penuh gamifikasi, iklan, dan fitur yang membuat orang berhenti memakainya setelah seminggu.
+
+## Solusi
+
+Ritme hanya menampilkan satu hal: kebiasaan hari ini. Pengingat menyesuaikan jam saat pengguna biasanya menyelesaikan kebiasaan, dan widget membuat progres terlihat tanpa membuka aplikasi.
+
+## Fitur utama
+
+- Streak harian dengan tampilan kalender
+- Pengingat pintar berbasis WorkManager
+- Widget layar utama (Glance)
+- Data tersimpan lokal dengan Room, tanpa akun
+
+## Hasil
+
+Masih dalam pengembangan. Prototipe internal sudah dipakai sendiri setiap hari selama dua bulan untuk menguji alur pengingat.

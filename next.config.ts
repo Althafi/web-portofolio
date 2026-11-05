@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -14,4 +14,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Plugin ditulis sebagai string supaya bisa dipakai Turbopack.
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ["remark-frontmatter", "remark-gfm"],
+    rehypePlugins: ["rehype-slug"],
+  },
+});
+
+export default withMDX(nextConfig);

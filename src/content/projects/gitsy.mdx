@@ -1,0 +1,54 @@
+---
+# DATA DUMMY — ganti di Fase 9 (lihat docs/CHECKLIST-DATA.md)
+title: gitsy
+category: tools
+kind: CLI
+summary: "CLI pembantu Git: pasang hooks, rapikan commit, dan log yang enak dibaca."
+tagline: CLI kecil yang merapikan alur kerja Git — hooks, commit konvensional, dan log yang enak dibaca.
+stack: [Go, Cobra, Homebrew, GoReleaser]
+role: Pembuat & maintainer
+duration: 1 bulan
+platform: macOS & Linux
+year: 2026
+status: released
+featured: true
+order: 4
+links:
+  github: https://github.com/altap/gitsy
+stats:
+  - { value: "120+", label: bintang GitHub }
+  - { value: "8", label: perintah }
+  - { value: "< 5 MB", label: ukuran biner }
+highlights:
+  - Pasang git hooks dengan satu perintah
+  - Validasi pesan commit konvensional
+  - Log berwarna yang mudah dibaca
+terminal:
+  - "$ gitsy init"
+  - "✔ hooks terpasang"
+  - "$ gitsy log --pretty"
+  - "  a3f9e1 feat: mode offline"
+  - "  9c02bd fix: crash saat sync"
+showcase:
+  label: Perintah
+  value: gitsy init
+---
+
+## Masalah
+
+Setiap repo baru butuh setup hooks, template commit, dan alias yang sama. Menyalinnya manual memakan waktu dan sering berbeda antar anggota tim.
+
+## Solusi
+
+gitsy membungkus pekerjaan berulang itu dalam satu biner Go. Satu perintah memasang hooks, memvalidasi pesan commit, dan menampilkan log yang mudah dipindai.
+
+## Fitur utama
+
+- `gitsy init` memasang hooks dan template commit
+- Validasi pesan commit konvensional
+- `gitsy log --pretty` dengan warna dan grafik cabang
+- Distribusi lewat Homebrew dan rilis GitHub
+
+## Hasil
+
+Dipakai di beberapa repo pribadi dan tim kecil. Waktu setup repo baru turun dari sekitar 10 menit menjadi kurang dari satu menit.
