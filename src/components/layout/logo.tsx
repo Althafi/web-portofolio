@@ -12,6 +12,10 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Logo navbar. `data-logo-*` menjadi titik pendaratan blob + nama dari preloader;
+ * selama preloader berjalan (`html[data-preloading]`) logo ini disembunyikan.
+ */
 export function Logo({ className }: { className?: string }) {
   return (
     <Link
@@ -19,8 +23,15 @@ export function Logo({ className }: { className?: string }) {
       aria-label={`${profile.handle} — ke beranda`}
       className={cn("flex items-center gap-2.5 rounded-md", className)}
     >
-      <LogoMark />
-      <span className="text-lg font-semibold tracking-[-0.02em] text-fg">{profile.handle}</span>
+      <span data-logo-mark className="logo-part">
+        <LogoMark />
+      </span>
+      <span
+        data-logo-text
+        className="logo-part block text-lg leading-none font-semibold tracking-[-0.02em] text-fg"
+      >
+        {profile.handle}
+      </span>
     </Link>
   );
 }

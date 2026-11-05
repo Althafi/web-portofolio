@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { CommandMenuProvider } from "@/components/layout/command-menu";
+import { MotionProvider } from "@/components/layout/motion-provider";
+import { Preloader, PRELOADER_SCRIPT } from "@/components/effects/preloader";
 import { getAllProjects } from "@/lib/projects";
 import { profile } from "@/lib/profile";
 import "./globals.css";
@@ -33,18 +35,28 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistMono.variable} h-full`}
     >
+      <head>
+        {/* Tandai kunjungan berikutnya / reduced motion sebelum paint pertama */}
+        <script dangerouslySetInnerHTML={{ __html: PRELOADER_SCRIPT }} />
+        <noscript>
+          <style>{`.preloader{display:none}.hero-word,.hero-fade{animation:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
-          <TooltipProvider>
-            <CommandMenuProvider projects={commandProjects}>
-              <Navbar />
-              <main id="konten" className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </CommandMenuProvider>
-            <Toaster position="bottom-center" />
-          </TooltipProvider>
+          <MotionProvider>
+            <TooltipProvider>
+              <Preloader />
+              <CommandMenuProvider projects={commandProjects}>
+                <Navbar />
+                <main id="konten" className="flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </CommandMenuProvider>
+              <Toaster position="bottom-center" />
+            </TooltipProvider>
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/layout/container";
@@ -12,9 +13,24 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const pathname = usePathname();
   const commandMenu = useCommandMenu();
+  const [scrolled, setScrolled] = useState(false);
+
+  // (08) Navbar menempel dengan blur setelah halaman digulir
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 h-16 border-b border-border bg-bg">
+    <header
+      className={cn(
+        "sticky top-0 z-50 h-16 border-b border-border transition-[background-color,backdrop-filter] duration-300",
+        scrolled ? "bg-bg/75 backdrop-blur-md backdrop-saturate-150" : "bg-bg",
+      )}
+      style={{ viewTransitionName: "site-header" }}
+    >
       <Container className="grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4">
         <Logo className="justify-self-start" />
 

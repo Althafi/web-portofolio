@@ -29,7 +29,10 @@ const components = {
     </li>
   ),
   a: ({ children, href }) => (
-    <a href={href} className="text-fg underline decoration-border underline-offset-4 hover:decoration-accent">
+    <a
+      href={href}
+      className="text-fg underline decoration-border underline-offset-4 hover:decoration-accent"
+    >
       {children}
     </a>
   ),

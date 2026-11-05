@@ -30,12 +30,36 @@ export function DemoDialog({
   /** Elemen pemicu (dirender dengan asChild) */
   children: React.ReactElement;
 }) {
+  // (13) Modal "membesar" dari posisi tombol pemicu
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+
   return (
     <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger
+        asChild
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setOrigin({
+            x: rect.left + rect.width / 2 - window.innerWidth / 2,
+            y: rect.top + rect.height / 2 - window.innerHeight / 2,
+          });
+        }}
+      >
+        {children}
+      </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-[20px] bg-bg p-0 ring-0 sm:max-w-[920px] md:min-h-[640px] md:grid-cols-[400px_1fr] md:overflow-hidden"
+        style={
+          {
+            "--tw-enter-translate-x": `${origin.x}px`,
+            "--tw-enter-translate-y": `${origin.y}px`,
+            "--tw-enter-scale": "0.15",
+            "--tw-exit-translate-x": `${origin.x}px`,
+            "--tw-exit-translate-y": `${origin.y}px`,
+            "--tw-exit-scale": "0.15",
+          } as React.CSSProperties
+        }
+        className="max-h-[calc(100dvh-2rem)] gap-0 duration-300 ease-[cubic-bezier(.2,.8,.2,1)] data-closed:duration-200 overflow-y-auto rounded-[20px] bg-bg p-0 ring-0 sm:max-w-[920px] md:min-h-[640px] md:grid-cols-[400px_1fr] md:overflow-hidden"
       >
         <DemoBody project={project} />
         <DialogClose asChild>
@@ -63,7 +87,10 @@ function DemoBody({ project }: { project: DemoProject }) {
   // Bab aktif mengikuti posisi video; tanpa video, mengikuti pilihan terakhir.
   const active = videoFailed
     ? selected
-    : Math.max(0, chapters.findLastIndex((c) => c.at <= time));
+    : Math.max(
+        0,
+        chapters.findLastIndex((c) => c.at <= time),
+      );
 
   function jumpTo(index: number) {
     setSelected(index);
@@ -116,7 +143,9 @@ function DemoBody({ project }: { project: DemoProject }) {
                 <span className="grid size-16 place-items-center rounded-full bg-white text-[#09090b]">
                   <Play className="ml-1 size-5" fill="currentColor" aria-hidden />
                 </span>
-                <span className="px-6 font-mono text-[11px] text-[#a1a1aa]">Rekaman segera tersedia</span>
+                <span className="px-6 font-mono text-[11px] text-[#a1a1aa]">
+                  Rekaman segera tersedia
+                </span>
               </div>
             )}
           </div>
@@ -154,7 +183,12 @@ function DemoBody({ project }: { project: DemoProject }) {
                     i === active ? "bg-accent-soft font-medium" : "hover:bg-surface",
                   )}
                 >
-                  <span className={cn("w-[29px] font-mono text-xs", i === active ? "text-accent" : "text-muted")}>
+                  <span
+                    className={cn(
+                      "w-[29px] font-mono text-xs",
+                      i === active ? "text-accent" : "text-muted",
+                    )}
+                  >
                     {formatTime(chapter.at)}
                   </span>
                   <span className="text-fg">{chapter.label}</span>

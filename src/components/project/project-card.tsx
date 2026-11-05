@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, ViewTransition } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,13 +16,17 @@ import {
   storeLinks,
   type Project,
 } from "@/lib/project-types";
+import { useMousePosition } from "@/hooks/use-mouse-position";
 import { cn } from "@/lib/utils";
 
 export function ProjectCard({ project, className }: { project: Project; className?: string }) {
   const [flipped, setFlipped] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  useMousePosition(ref);
 
   return (
     <article
+      ref={ref}
       aria-label={project.title}
       className={cn("group/card relative h-[436px] [perspective:1400px]", className)}
     >
@@ -63,14 +67,26 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
       inert={hidden}
       className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-border bg-bg [backface-visibility:hidden]"
     >
-      <div className="relative h-[220px] shrink-0 overflow-hidden border-b border-border bg-surface">
-        <ProjectThumb project={project} />
-        {!isReleased(project) && (
-          <StatusPill className="absolute top-3 left-3" pulse>
-            {statusLabels[project.status]}
-          </StatusPill>
-        )}
-      </div>
+      {/* (05) Spotlight biru mengikuti kursor */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+        style={{
+          background:
+            "radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--accent) 16%, transparent), transparent 70%)",
+        }}
+      />
+      {/* (10) Thumbnail "terbang" menjadi showcase di halaman detail */}
+      <ViewTransition name={`project-${project.slug}`} share="morph" default="none">
+        <div className="relative h-[220px] shrink-0 overflow-hidden border-b border-border bg-surface">
+          <ProjectThumb project={project} />
+          {!isReleased(project) && (
+            <StatusPill className="absolute top-3 left-3" pulse>
+              {statusLabels[project.status]}
+            </StatusPill>
+          )}
+        </div>
+      </ViewTransition>
 
       <div className="flex flex-1 flex-col px-5 pt-5">
         <div className="flex items-center justify-between">
@@ -98,7 +114,10 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
         </Link>
         {action?.kind === "demo" && (
           <DemoDialog project={project}>
-            <button type="button" className="relative z-10 text-muted transition-colors hover:text-fg">
+            <button
+              type="button"
+              className="relative z-10 text-muted transition-colors hover:text-fg"
+            >
               {action.label} <span aria-hidden>▶</span>
               <span className="sr-only">: {project.title}</span>
             </button>
@@ -122,7 +141,8 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
 function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
   const external = isReleased(project) ? storeLinks(project)[0] : undefined;
   const secondary =
-    external ?? (project.links.github ? { label: "GitHub", href: project.links.github } : undefined);
+    external ??
+    (project.links.github ? { label: "GitHub", href: project.links.github } : undefined);
 
   return (
     <div
@@ -134,7 +154,10 @@ function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
       {project.stats?.length ? (
         <dl className="grid grid-cols-3 gap-2">
           {project.stats.slice(0, 3).map((stat) => (
-            <div key={stat.label} className="flex flex-col-reverse gap-0.5 rounded-[10px] bg-inverse-fg/[0.07] p-3">
+            <div
+              key={stat.label}
+              className="flex flex-col-reverse gap-0.5 rounded-[10px] bg-inverse-fg/[0.07] p-3"
+            >
               <dt className="text-xs text-inverse-fg/60">{stat.label}</dt>
               <dd className="text-[22px] leading-tight font-semibold text-accent">{stat.value}</dd>
             </div>

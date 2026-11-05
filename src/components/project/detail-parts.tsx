@@ -1,4 +1,5 @@
 import { Chip } from "@/components/ui/chip";
+import { ProgressInView } from "@/components/effects/progress-in-view";
 import { cn } from "@/lib/utils";
 import { isReleased, statusText, type Project } from "@/lib/project-types";
 
@@ -31,102 +32,7 @@ export function MetaGrid({ project }: { project: Project }) {
   );
 }
 
-/* ---------- Showcase 3 HP ---------- */
-
-function ShowcasePhone({
-  className,
-  children,
-  center = false,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-  center?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "absolute",
-        center
-          ? "h-[450px] w-[220px] rounded-[38px] bg-[#3f3f46] p-2"
-          : "h-[410px] w-[200px] rounded-[34px] bg-[#27272a] p-2",
-        className,
-      )}
-    >
-      <div
-        className={cn(
-          "relative h-full w-full overflow-hidden bg-bg",
-          center ? "rounded-[30px]" : "rounded-[27px]",
-        )}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
-
-export function Showcase({ project }: { project: Project }) {
-  return (
-    <div
-      aria-hidden
-      className="relative h-[420px] overflow-hidden rounded-[20px] border border-border bg-surface sm:h-[540px]"
-    >
-      <span className="absolute -top-[260px] left-1/2 size-[600px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--accent)_30%,transparent),transparent)]" />
-      <div className="absolute inset-x-0 top-[60px] mx-auto h-full w-[580px] max-sm:origin-top max-sm:scale-[0.78]">
-        <ShowcasePhone className="top-[62px] left-0 max-sm:hidden" />
-        <ShowcasePhone className="top-[41px] right-0 max-sm:hidden" />
-        <ShowcasePhone center className="top-0 left-1/2 -translate-x-1/2">
-          {project.showcase && (
-            <>
-              <p className="absolute top-10 left-[18px] text-[11px] text-muted">{project.showcase.label}</p>
-              <p className="absolute top-[58px] left-[18px] text-2xl font-semibold tracking-tight text-fg">
-                {project.showcase.value}
-              </p>
-            </>
-          )}
-          <span className="absolute top-[104px] left-[18px] h-[90px] w-[168px] rounded-[14px] bg-accent" />
-          <span className="absolute top-[206px] left-[18px] size-20 rounded-[14px] bg-surface" />
-          <span className="absolute top-[206px] left-[106px] size-20 rounded-[14px] bg-surface" />
-          <span className="absolute top-[298px] left-[18px] h-[110px] w-[168px] rounded-[14px] bg-surface" />
-        </ShowcasePhone>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- Sidebar ---------- */
-
-export function TableOfContents({
-  items,
-  activeId,
-}: {
-  items: { id: string; title: string }[];
-  activeId?: string;
-}) {
-  return (
-    <nav aria-label="Di halaman ini" className="border-l border-border py-1 pl-4">
-      <p className="text-label text-muted">Di halaman ini</p>
-      <ul className="mt-2.5 space-y-2.5">
-        {items.map((item, i) => {
-          const active = activeId ? activeId === item.id : i === 0;
-          return (
-            <li key={item.id}>
-              <a
-                href={`#${item.id}`}
-                aria-current={active ? "location" : undefined}
-                className={cn(
-                  "block text-sm transition-colors",
-                  active ? "font-medium text-accent" : "text-muted hover:text-fg",
-                )}
-              >
-                {item.title}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
-}
 
 export function TechStackCard({ stack }: { stack: string[] }) {
   return (
@@ -155,20 +61,7 @@ export function RoadmapCard({ project }: { project: Project }) {
         <h2 className="text-[15px] font-semibold text-fg">Roadmap rilis</h2>
         <span className="font-mono text-xs font-medium text-accent">{progress}%</span>
       </div>
-      <div
-        role="progressbar"
-        aria-label="Progres menuju rilis"
-        aria-valuenow={progress}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        className="mt-3.5 h-1.5 overflow-hidden rounded-[3px] bg-border"
-      >
-        <div
-          data-progress-bar
-          className="h-full origin-left rounded-[3px] bg-accent"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      <ProgressInView value={progress} label="Progres menuju rilis" />
       <ol className="mt-3.5 space-y-3.5">
         {project.roadmap.map((step) => {
           const note =

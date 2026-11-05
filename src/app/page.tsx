@@ -1,3 +1,4 @@
+import { PageTransition } from "@/components/layout/page-transition";
 import { Hero } from "@/components/sections/hero";
 import { TechStack } from "@/components/sections/tech-stack";
 import { FeaturedProjects } from "@/components/sections/featured-projects";
@@ -10,12 +11,12 @@ export default function Home() {
   const counts = getCategoryCounts();
 
   return (
-    <>
+    <PageTransition>
       <Hero counts={counts} />
       <TechStack />
       <FeaturedProjects projects={projects} counts={counts} />
       <ExperienceSection />
       <ContactCta />
-    </>
+    </PageTransition>
   );
 }

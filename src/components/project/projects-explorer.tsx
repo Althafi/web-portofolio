@@ -4,7 +4,7 @@ import { Search, X } from "lucide-react";
 import { useDeferredValue, useState } from "react";
 import { EmptyState } from "@/components/project/empty-state";
 import { FilterTabs, type Filter } from "@/components/project/filter-tabs";
-import { ProjectCard } from "@/components/project/project-card";
+import { AnimatedProjectGrid } from "@/components/project/animated-grid";
 import { useCategoryFilter } from "@/hooks/use-category-filter";
 import {
   categories,
@@ -17,15 +17,18 @@ import {
 const emptyCopy: Record<Category, { title: string; description: string }> = {
   mobile: {
     title: "Belum ada proyek mobile",
-    description: "Proyek mobile berikutnya sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis.",
+    description:
+      "Proyek mobile berikutnya sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis.",
   },
   web: {
     title: "Belum ada proyek web",
-    description: "Proyek web pertama sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis.",
+    description:
+      "Proyek web pertama sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis.",
   },
   tools: {
     title: "Belum ada tools",
-    description: "Tools berikutnya sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis.",
+    description:
+      "Tools berikutnya sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis.",
   },
 };
 
@@ -78,7 +81,10 @@ function ProjectsExplorerView({
       <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
         <FilterTabs counts={counts} value={filter} onChange={onFilterChange} />
         <div className="relative flex h-10 w-full items-center rounded-[10px] border border-border bg-bg focus-within:border-accent sm:w-[280px]">
-          <Search className="pointer-events-none absolute left-3.5 size-[15px] text-muted" aria-hidden />
+          <Search
+            className="pointer-events-none absolute left-3.5 size-[15px] text-muted"
+            aria-hidden
+          />
           <label htmlFor="cari-proyek" className="sr-only">
             Cari proyek atau teknologi
           </label>
@@ -127,13 +133,7 @@ function ProjectsExplorerView({
                 </span>
               </h2>
               {items.length > 0 ? (
-                <ul className="mt-[18px] grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {items.map((project) => (
-                    <li key={project.slug}>
-                      <ProjectCard project={project} />
-                    </li>
-                  ))}
-                </ul>
+                <AnimatedProjectGrid projects={items} className="mt-[18px]" />
               ) : (
                 <EmptyState className="mt-[18px]" {...emptyCopy[category]} />
               )}

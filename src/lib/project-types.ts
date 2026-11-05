@@ -122,8 +122,7 @@ export function storeLinks(project: Pick<Project, "links">): StoreLink[] {
  * - status lain → "Tonton demo" (bila ada demo) + badge status
  */
 export type PrimaryAction =
-  | { kind: "demo"; label: string }
-  | { kind: "link"; label: string; href: string };
+  { kind: "demo"; label: string } | { kind: "link"; label: string; href: string };
 
 export function primaryAction(project: Project): PrimaryAction | null {
   if (isReleased(project)) {

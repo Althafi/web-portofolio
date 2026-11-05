@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { StatusPill } from "@/components/ui/status-pill";
 import { LocalTime } from "@/components/sections/local-time";
 import { AvatarCard } from "@/components/sections/avatar-card";
+import { DotGrid } from "@/components/effects/dot-grid";
+import { HeroTitle } from "@/components/effects/hero-title";
+import { TiltCard } from "@/components/effects/tilt-card";
 import { mailto, profile } from "@/lib/profile";
 import type { CategoryCounts } from "@/lib/project-types";
 
@@ -23,19 +26,25 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
 
   return (
     <section aria-labelledby="hero-title" className="relative overflow-hidden">
+      <DotGrid />
       <Container className="relative grid items-center gap-14 pt-16 pb-20 lg:grid-cols-[1fr_340px] lg:gap-10 lg:pt-28 lg:pb-32">
         <div className="max-w-[720px]">
           {profile.available && (
-            <StatusPill tone="live" size="md" pulse>
+            <StatusPill tone="live" size="md" pulse className="hero-fade [--d:0s]">
               {profile.availability}
             </StatusPill>
           )}
-          <h1 id="hero-title" className="mt-[22px] text-display text-fg">
-            {profile.headline}
-          </h1>
-          <p className="mt-[18px] max-w-[560px] text-lead text-muted">{profile.bio}</p>
+          <HeroTitle
+            id="hero-title"
+            text={profile.headline}
+            slots={profile.rotatingWords}
+            className="mt-[22px] text-display text-fg"
+          />
+          <p className="hero-fade mt-[18px] max-w-[560px] text-lead text-muted [--d:0.55s]">
+            {profile.bio}
+          </p>
 
-          <div className="mt-[29px] flex flex-wrap items-center gap-2.5">
+          <div className="hero-fade mt-[29px] flex flex-wrap items-center gap-2.5 [--d:0.7s]">
             <Button asChild variant="primary" size="md">
               <Link href="/proyek">
                 Lihat proyek <ArrowRight className="size-4" aria-hidden />
@@ -63,15 +72,17 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
         </div>
 
         {/* Kartu avatar + chip mengambang */}
-        <div className="relative mx-auto w-full max-w-[340px] lg:mx-0">
-          <AvatarCard />
+        <div className="hero-fade relative mx-auto w-full max-w-[340px] [--d:0.35s] lg:mx-0">
+          <TiltCard>
+            <AvatarCard />
+          </TiltCard>
 
-          <div className="absolute -top-6 -right-2 flex h-8 items-center rounded-2xl border border-border bg-bg px-3 font-mono text-xs text-fg shadow-[0_8px_24px_rgb(0_0_0/0.1)] sm:-right-8">
+          <div className="float-slow absolute -top-6 -right-2 flex h-8 items-center rounded-2xl border border-border bg-bg px-3 font-mono text-xs text-fg shadow-[0_8px_24px_rgb(0_0_0/0.1)] sm:-right-8">
             {profile.location} ·&nbsp;
             <LocalTime />
           </div>
 
-          <div className="absolute bottom-3.5 -left-3 w-[200px] rounded-[14px] border border-border bg-bg px-4 py-3 shadow-[0_8px_24px_rgb(0_0_0/0.1)] sm:-left-12">
+          <div className="float-slow-2 absolute bottom-3.5 -left-3 w-[200px] rounded-[14px] border border-border bg-bg px-4 py-3 shadow-[0_8px_24px_rgb(0_0_0/0.1)] sm:-left-12">
             <p className="text-base font-semibold text-fg">{counts.all} proyek dibangun</p>
             <p className="mt-0.5 text-[13px] text-muted">{statsLine(counts)}</p>
           </div>

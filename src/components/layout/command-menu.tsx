@@ -1,15 +1,7 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import {
   ArrowRight,
   AtSign,
@@ -36,6 +28,7 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useCopyEmail } from "@/hooks/use-copy-email";
+import { useThemeSwitch } from "@/hooks/use-theme-switch";
 import { mailto, profile } from "@/lib/profile";
 import { categoryLabels, type Category } from "@/lib/project-types";
 
@@ -68,7 +61,7 @@ export function CommandMenuProvider({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { setTheme } = useTheme();
+  const setTheme = useThemeSwitch();
   const copyEmail = useCopyEmail();
 
   useEffect(() => {
@@ -159,22 +152,16 @@ export function CommandMenuProvider({
                   {profile.email}
                 </CommandShortcut>
               </CommandItem>
-              <CommandItem
-                onSelect={() => run(() => (window.location.href = mailto))}
-              >
+              <CommandItem onSelect={() => run(() => (window.location.href = mailto))}>
                 <ArrowRight /> Kirim email
               </CommandItem>
-              <CommandItem
-                onSelect={() => run(() => window.open(profile.cv, "_blank"))}
-              >
+              <CommandItem onSelect={() => run(() => window.open(profile.cv, "_blank"))}>
                 <FileDown /> Unduh CV
               </CommandItem>
               {profile.socials.map((s) => (
                 <CommandItem
                   key={s.label}
-                  onSelect={() =>
-                    run(() => window.open(s.href, "_blank", "noopener"))
-                  }
+                  onSelect={() => run(() => window.open(s.href, "_blank", "noopener"))}
                 >
                   <ArrowRight /> Buka {s.label}
                 </CommandItem>

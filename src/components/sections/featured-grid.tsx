@@ -2,7 +2,7 @@
 
 import { EmptyState } from "@/components/project/empty-state";
 import { FilterTabs, type Filter } from "@/components/project/filter-tabs";
-import { ProjectCard } from "@/components/project/project-card";
+import { AnimatedProjectGrid } from "@/components/project/animated-grid";
 import { useCategoryFilter } from "@/hooks/use-category-filter";
 import { categoryLabels, type CategoryCounts, type Project } from "@/lib/project-types";
 
@@ -39,13 +39,7 @@ function FeaturedGridView({
     <>
       <FilterTabs counts={counts} value={filter} onChange={onFilterChange} className="mt-[35px]" />
       {items.length > 0 ? (
-        <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((project) => (
-            <li key={project.slug}>
-              <ProjectCard project={project} />
-            </li>
-          ))}
-        </ul>
+        <AnimatedProjectGrid projects={items} className="mt-8" />
       ) : (
         <EmptyState
           className="mt-8"

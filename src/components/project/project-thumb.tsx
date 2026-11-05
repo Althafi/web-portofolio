@@ -1,3 +1,4 @@
+import { TypingTerminal } from "@/components/effects/typing-terminal";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/project-types";
 
@@ -36,13 +37,7 @@ export function PhoneMock({ variant = 0, className }: { variant?: number; classN
   );
 }
 
-export function TerminalMock({
-  lines,
-  className,
-}: {
-  lines: string[];
-  className?: string;
-}) {
+export function TerminalMock({ lines, className }: { lines: string[]; className?: string }) {
   return (
     <div
       className={cn(
@@ -55,13 +50,7 @@ export function TerminalMock({
           <span key={i} className="size-2 rounded-full bg-[#3f3f46]" />
         ))}
       </div>
-      <pre className="mt-3.5 font-mono text-[11px] leading-[1.6] whitespace-pre text-[#d4d4d8]">
-        {lines.join("\n")}
-        {"\n$ "}
-        <span aria-hidden className="animate-pulse">
-          █
-        </span>
-      </pre>
+      <TypingTerminal lines={lines} />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { PageTransition } from "@/components/layout/page-transition";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/container";
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <>
+    <PageTransition>
       <Container className="pt-14">
         {/* Bio + foto */}
         <section className="grid gap-12 lg:grid-cols-[1fr_340px] lg:gap-20">
@@ -73,7 +74,10 @@ export default function AboutPage() {
         </section>
 
         {/* Timeline pengalaman */}
-        <section aria-labelledby="pengalaman" className="mt-[92px] grid gap-8 lg:grid-cols-[400px_1fr] lg:gap-0">
+        <section
+          aria-labelledby="pengalaman"
+          className="mt-[92px] grid gap-8 lg:grid-cols-[400px_1fr] lg:gap-0"
+        >
           <div>
             <h2 id="pengalaman" className="text-h2 text-fg">
               Pengalaman
@@ -86,6 +90,6 @@ export default function AboutPage() {
         </section>
       </Container>
       <ContactCta />
-    </>
+    </PageTransition>
   );
 }
