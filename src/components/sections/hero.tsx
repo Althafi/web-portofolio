@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { StatusPill } from "@/components/ui/status-pill";
 import { LocalTime } from "@/components/sections/local-time";
+import { AvatarCard } from "@/components/sections/avatar-card";
 import { mailto, profile } from "@/lib/profile";
 import type { CategoryCounts } from "@/lib/project-types";
 
@@ -63,12 +64,7 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
 
         {/* Kartu avatar + chip mengambang */}
         <div className="relative mx-auto w-full max-w-[340px] lg:mx-0">
-          <div className="relative aspect-[340/420] overflow-hidden rounded-[20px] border border-border bg-surface">
-            <span className="absolute top-[18px] left-5 font-mono text-[11px] text-muted">FOTO</span>
-            <span aria-hidden className="absolute top-[28.5%] left-1/2 size-[35%] -translate-x-1/2 rounded-full bg-border" />
-            <span aria-hidden className="absolute top-[62%] left-1/2 h-[48%] w-[65%] -translate-x-1/2 rounded-t-[110px] bg-border" />
-            <span className="sr-only">Foto {profile.name}</span>
-          </div>
+          <AvatarCard />
 
           <div className="absolute -top-6 -right-2 flex h-8 items-center rounded-2xl border border-border bg-bg px-3 font-mono text-xs text-fg shadow-[0_8px_24px_rgb(0_0_0/0.1)] sm:-right-8">
             {profile.location} ·&nbsp;

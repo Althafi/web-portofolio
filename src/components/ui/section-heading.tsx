@@ -8,13 +8,22 @@ type Props = {
   className?: string;
   id?: string;
   as?: "h1" | "h2";
+  size?: "md" | "sm";
 };
 
-export function SectionHeading({ title, description, action, className, id, as: Tag = "h2" }: Props) {
+export function SectionHeading({
+  title,
+  description,
+  action,
+  className,
+  id,
+  as: Tag = "h2",
+  size = "md",
+}: Props) {
   return (
     <div className={cn("space-y-1.5", className)}>
       <div className="flex items-center justify-between gap-6">
-        <Tag id={id} className="text-h2 text-fg">
+        <Tag id={id} className={`${size === "md" ? "text-h2" : "text-h3"} text-fg`}>
           {title}
         </Tag>
         {action ? (
