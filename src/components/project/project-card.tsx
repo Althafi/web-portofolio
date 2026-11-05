@@ -59,13 +59,26 @@ export function ProjectCard({ project, className }: { project: Project; classNam
   );
 }
 
+/**
+ * Sisi yang tidak aktif disembunyikan sepenuhnya setelah animasi flip (500 ms)
+ * supaya tidak terbaca pembaca layar / alat audit kontras.
+ */
+function faceVisibility(hidden: boolean) {
+  return hidden
+    ? "invisible [transition:visibility_0s_linear_500ms]"
+    : "visible [transition:visibility_0s]";
+}
+
 function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
   const action = primaryAction(project);
 
   return (
     <div
       inert={hidden}
-      className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-border bg-bg [backface-visibility:hidden]"
+      className={cn(
+        "absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-border bg-bg [backface-visibility:hidden]",
+        faceVisibility(hidden),
+      )}
     >
       {/* (05) Spotlight biru mengikuti kursor */}
       <span
@@ -147,7 +160,10 @@ function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
   return (
     <div
       inert={hidden}
-      className="absolute inset-0 flex flex-col gap-[18px] overflow-hidden rounded-2xl bg-inverse-bg p-6 text-inverse-fg [backface-visibility:hidden] [transform:rotateY(180deg)]"
+      className={cn(
+        "absolute inset-0 flex flex-col gap-[18px] overflow-hidden rounded-2xl bg-inverse-bg p-6 text-inverse-fg [backface-visibility:hidden] [transform:rotateY(180deg)]",
+        faceVisibility(hidden),
+      )}
     >
       <p className="flex h-8 items-center pr-10 text-h4">{project.title}</p>
 
@@ -159,7 +175,7 @@ function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
               className="flex flex-col-reverse gap-0.5 rounded-[10px] bg-inverse-fg/[0.07] p-3"
             >
               <dt className="text-xs text-inverse-fg/60">{stat.label}</dt>
-              <dd className="text-[22px] leading-tight font-semibold text-accent">{stat.value}</dd>
+              <dd className="text-[22px] leading-tight font-semibold text-accent-inverse">{stat.value}</dd>
             </div>
           ))}
         </dl>

@@ -47,9 +47,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <MotionProvider>
             <TooltipProvider>
               <Preloader />
+              <a
+                href="#konten"
+                className="sr-only z-[110] rounded-lg bg-inverse-bg px-4 py-2 text-sm font-medium text-inverse-fg focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+              >
+                Lewati ke konten
+              </a>
               <CommandMenuProvider projects={commandProjects}>
                 <Navbar />
-                <main id="konten" className="flex-1">
+                <main id="konten" tabIndex={-1} className="flex-1 outline-none">
                   {children}
                 </main>
                 <Footer />

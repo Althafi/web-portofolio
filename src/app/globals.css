@@ -13,12 +13,16 @@
   --surface: #f4f4f5;
   --border: #e4e4e7;
   --fg: #09090b;
-  --muted: #71717a;
-  --accent: #2f7db5;
+  /* muted & accent sedikit digelapkan dari desain (#71717A, #2F7DB5)
+   * supaya kontras teks ≥ 4.5:1 juga di atas surface/accent-soft. */
+  --muted: #6b6b74;
+  --accent: #2971a6;
   --accent-soft: #eaf3fa;
   --inverse-bg: #09090b;
   --inverse-fg: #fafafa;
   --dot: #d4d4d8;
+  /* Aksen di atas latar inverse (sisi belakang kartu flip) */
+  --accent-inverse: #7cb8e4;
 
   /* Warna status (sama di kedua tema) */
   --status-live: #22c55e;
@@ -56,6 +60,7 @@
   --inverse-bg: #fafafa;
   --inverse-fg: #09090b;
   --dot: #2e2e33;
+  --accent-inverse: #2971a6;
   --destructive: #f87171;
 
   color-scheme: dark;
@@ -70,6 +75,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-inverse: var(--accent-inverse);
   --color-inverse-bg: var(--inverse-bg);
   --color-inverse-fg: var(--inverse-fg);
   --color-dot: var(--dot);

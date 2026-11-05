@@ -55,19 +55,21 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
                 Unduh CV
               </a>
             </Button>
-            <span aria-hidden className="mx-0.5 h-6 w-px bg-border" />
-            {socials.map((s) => (
-              <Button key={s.label} asChild variant="secondary" size="icon-md">
-                <a
-                  href={s.href}
-                  aria-label={s.label}
-                  {...(s.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-                  className="font-mono text-[13px] font-semibold"
-                >
-                  {s.short}
-                </a>
-              </Button>
-            ))}
+            <span aria-hidden className="mx-0.5 hidden h-6 w-px bg-border sm:block" />
+            <div className="flex gap-2.5">
+              {socials.map((s) => (
+                <Button key={s.label} asChild variant="secondary" size="icon-md">
+                  <a
+                    href={s.href}
+                    aria-label={s.label}
+                    {...(s.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                    className="font-mono text-[13px] font-semibold"
+                  >
+                    {s.short}
+                  </a>
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
 
