@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Footer } from "@/components/layout/footer";
@@ -11,14 +11,34 @@ import { MotionProvider } from "@/components/layout/motion-provider";
 import { Preloader, PRELOADER_SCRIPT } from "@/components/effects/preloader";
 import { getAllProjects } from "@/lib/projects";
 import { profile } from "@/lib/profile";
+import { siteUrl } from "@/lib/site";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${profile.name} — ${profile.role}`,
     template: `%s · ${profile.name}`,
   },
   description: profile.bio,
+  authors: [{ name: profile.name }],
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    siteName: profile.name,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
+  alternates: { canonical: "/" },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -64,6 +84,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </TooltipProvider>
           </MotionProvider>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

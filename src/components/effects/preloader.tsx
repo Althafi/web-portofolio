@@ -13,14 +13,14 @@ import { profile } from "@/lib/profile";
  * 1,4 dtk  blob + nama mengecil & terbang ke posisi logo navbar, halaman masuk
  *
  * Skrip di <head> (PRELOADER_SCRIPT) menandai <html data-preloaded> untuk
- * kunjungan berikutnya / reduced motion sehingga overlay langsung disembunyikan
+ * kunjungan berikutnya, reduced motion, dan perangkat sentuh (demi performa HP) sehingga overlay langsung disembunyikan
  * lewat CSS. Pada kunjungan pertama ia menandai <html data-preloading> supaya
  * logo navbar disembunyikan sampai salinan dari preloader "mendarat".
  */
 
 export const PRELOADER_KEY = "altap:preloaded";
 
-export const PRELOADER_SCRIPT = `(function(){var d=document.documentElement;try{if(sessionStorage.getItem("${PRELOADER_KEY}")||matchMedia("(prefers-reduced-motion: reduce)").matches){d.dataset.preloaded="1"}else{d.dataset.preloading="1"}}catch(e){d.dataset.preloaded="1"}})()`;
+export const PRELOADER_SCRIPT = `(function(){var d=document.documentElement;try{if(sessionStorage.getItem("${PRELOADER_KEY}")||matchMedia("(prefers-reduced-motion: reduce)").matches||!matchMedia("(hover: hover) and (pointer: fine)").matches){d.dataset.preloaded="1"}else{d.dataset.preloading="1"}}catch(e){d.dataset.preloaded="1"}})()`;
 
 type Phase = "pending" | "icons" | "merge" | "name" | "fly" | "off";
 

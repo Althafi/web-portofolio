@@ -13,6 +13,7 @@ import { mailto, profile } from "@/lib/profile";
 export const metadata: Metadata = {
   title: "Tentang",
   description: `Tentang ${profile.name}: ${profile.role} yang membangun aplikasi mobile, web, dan tools CLI.`,
+  alternates: { canonical: "/tentang" },
 };
 
 export default function AboutPage() {

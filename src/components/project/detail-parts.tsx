@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Chip } from "@/components/ui/chip";
 import { ProgressInView } from "@/components/effects/progress-in-view";
 import { cn } from "@/lib/utils";
@@ -106,23 +107,39 @@ export function RoadmapCard({ project }: { project: Project }) {
 
 /* ---------- Galeri ---------- */
 
-export function Gallery({ title }: { title: string }) {
+export function Gallery({ project }: { project: Pick<Project, "title" | "gallery"> }) {
+  const shots = project.gallery?.slice(0, 3);
   return (
     <section aria-labelledby="galeri">
       <h2 id="galeri" className="scroll-mt-24 text-h3 text-fg">
         Galeri
       </h2>
       <ul className="mt-[17px] grid gap-6 sm:grid-cols-3">
-        {[1, 2, 3].map((n) => (
-          <li
-            key={n}
-            className="grid aspect-[357/240] place-items-center rounded-[14px] border border-border bg-surface"
-          >
-            <span className="font-mono text-[11px] text-muted">
-              {title} · screenshot {n}
-            </span>
-          </li>
-        ))}
+        {shots?.length
+          ? shots.map((shot) => (
+              <li
+                key={shot.src}
+                className="relative aspect-[357/240] overflow-hidden rounded-[14px] border border-border bg-surface"
+              >
+                <Image
+                  src={shot.src}
+                  alt={shot.alt}
+                  fill
+                  sizes="(min-width: 640px) 33vw, 100vw"
+                  className="object-cover"
+                />
+              </li>
+            ))
+          : [1, 2, 3].map((n) => (
+              <li
+                key={n}
+                className="grid aspect-[357/240] place-items-center rounded-[14px] border border-border bg-surface"
+              >
+                <span className="font-mono text-[11px] text-muted">
+                  {project.title} · screenshot {n}
+                </span>
+              </li>
+            ))}
       </ul>
     </section>
   );

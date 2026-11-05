@@ -28,7 +28,12 @@ export async function generateMetadata({ params }: PageProps<"/proyek/[slug]">):
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return { title: project.title, description: project.tagline };
+  return {
+    title: project.title,
+    description: project.tagline,
+    alternates: { canonical: `/proyek/${slug}` },
+    openGraph: { type: "article", title: project.title, description: project.tagline },
+  };
 }
 
 export default async function ProjectPage({ params }: PageProps<"/proyek/[slug]">) {
@@ -109,7 +114,7 @@ export default async function ProjectPage({ params }: PageProps<"/proyek/[slug]"
         </div>
 
         <div className="mt-[60px]">
-          <Gallery title={project.title} />
+          <Gallery project={project} />
         </div>
 
         {others.length > 0 && (

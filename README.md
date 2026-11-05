@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portofolio Altap
 
-## Getting Started
+Situs portofolio: aplikasi mobile, web, dan tools CLI lengkap dengan studi kasus.
+Dibangun dengan Next.js 16 (App Router, Cache Components), React 19, Tailwind CSS v4,
+shadcn/ui, Motion, dan MDX.
 
-First, run the development server:
+Rencana kerja per fase ada di [`docs/PLAN.md`](docs/PLAN.md), dan daftar data yang
+perlu disiapkan ada di [`docs/CHECKLIST-DATA.md`](docs/CHECKLIST-DATA.md).
+
+## Menjalankan
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # build produksi
+npm run start    # jalankan hasil build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Mengubah konten
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Yang diubah | Lokasi |
+|---|---|
+| Profil, bio, email, sosial, pengalaman, tech stack, foto | `src/lib/profile.ts` |
+| Proyek (data di frontmatter, studi kasus di isi MDX) | `src/content/projects/*.mdx` |
+| CV | `public/cv.pdf` |
+| Foto & screenshot galeri | `public/images/` |
+| Rekaman demo (MP4 vertikal) | `public/videos/` |
+| Warna tema | `src/app/globals.css` (`:root` dan `.dark`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Menambah proyek cukup dengan membuat file `.mdx` baru di `src/content/projects/`.
+Kartu, halaman detail, jumlah per kategori, sitemap, OG image, dan command palette
+ikut diperbarui otomatis. Bila `status` diubah ke `released` dan `links.playStore` diisi,
+tombol "Tonton demo" otomatis berganti menjadi tombol Play Store.
 
-## Learn More
+Frontmatter yang tersedia: lihat `src/content/projects/kasirku.mdx` sebagai contoh
+lengkap, dan tipe `Project` di `src/lib/project-types.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy (Vercel)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Import repo di Vercel (framework: Next.js, tanpa konfigurasi tambahan).
+2. Opsional: setel `NEXT_PUBLIC_SITE_URL` ke domain kustom (dipakai untuk sitemap,
+   canonical, dan Open Graph). Tanpa ini dipakai URL produksi Vercel.
+3. Aktifkan **Analytics** dan **Speed Insights** di dashboard proyek Vercel.
+   Komponennya sudah terpasang di `src/app/layout.tsx`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Struktur
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/                  halaman (beranda, proyek, proyek/[slug], tentang), OG image, sitemap, robots
+  components/
+    layout/             navbar, footer, command palette, transisi halaman, tema
+    sections/           bagian beranda (hero, tech stack, proyek pilihan, pengalaman, CTA)
+    project/            kartu proyek (flip), filter, modal demo, bagian halaman detail
+    effects/            15 efek dari panel "Motion & Efek" (mati saat reduced motion)
+    ui/                 komponen dasar (shadcn/ui + Badge, Chip, StatusPill, …)
+  content/projects/     studi kasus MDX
+  hooks/                reduced motion, posisi kursor, filter URL, ganti tema, salin email
+  lib/                  data profil, pembaca proyek, tipe & aturan tombol, URL situs, OG
+```

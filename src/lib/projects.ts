@@ -63,6 +63,7 @@ function parseProject(file: string): Project {
     roadmap: data.roadmap,
     showcase: data.showcase,
     terminal: data.terminal,
+    gallery: data.gallery,
     featured: Boolean(data.featured),
     order: typeof data.order === "number" ? data.order : 99,
     headings,

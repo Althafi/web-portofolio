@@ -66,6 +66,8 @@ export type Project = {
   showcase?: { label: string; value: string };
   /** Output terminal untuk thumbnail proyek CLI */
   terminal?: string[];
+  /** Screenshot galeri (path di public/images), maks. 3 */
+  gallery?: { src: string; alt: string }[];
   featured: boolean;
   order: number;
   /** Judul bagian (h2) di MDX, untuk daftar isi */

@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { CopyEmailButton } from "@/components/sections/copy-email-button";
-import { CursorGlow } from "@/components/effects/cursor-glow";
+import { LazyCursorGlow } from "@/components/effects/lazy";
 import { mailto, profile } from "@/lib/profile";
 
 export function ContactCta() {
@@ -10,7 +10,7 @@ export function ContactCta() {
     <section id="kontak" aria-labelledby="kontak-title" className="scroll-mt-24 pt-24 pb-[72px]">
       <Container>
         <div className="relative overflow-hidden rounded-3xl bg-inverse-bg px-6 py-10 sm:px-12 sm:pt-14 sm:pb-7">
-          <CursorGlow />
+          <LazyCursorGlow />
           <div className="relative">
             <h2 id="kontak-title" className="text-h2 text-inverse-fg">
               Punya ide yang ingin dibangun?

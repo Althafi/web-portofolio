@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Proyek",
   description:
     "Kumpulan aplikasi mobile, web, dan tools yang pernah saya bangun — lengkap dengan studi kasusnya.",
+  alternates: { canonical: "/proyek" },
 };
 
 export default function ProjectsPage() {

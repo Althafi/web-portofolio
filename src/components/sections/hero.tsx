@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { StatusPill } from "@/components/ui/status-pill";
 import { LocalTime } from "@/components/sections/local-time";
 import { AvatarCard } from "@/components/sections/avatar-card";
-import { DotGrid } from "@/components/effects/dot-grid";
+import { LazyDotGrid } from "@/components/effects/lazy";
 import { HeroTitle } from "@/components/effects/hero-title";
 import { TiltCard } from "@/components/effects/tilt-card";
 import { mailto, profile } from "@/lib/profile";
@@ -26,7 +26,7 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
 
   return (
     <section aria-labelledby="hero-title" className="relative overflow-hidden">
-      <DotGrid />
+      <LazyDotGrid />
       <Container className="relative grid items-center gap-14 pt-16 pb-20 lg:grid-cols-[1fr_340px] lg:gap-10 lg:pt-28 lg:pb-32">
         <div className="max-w-[720px]">
           {profile.available && (

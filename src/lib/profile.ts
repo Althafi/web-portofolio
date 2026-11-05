@@ -39,6 +39,8 @@ export const profile = {
   timezoneLabel: "WIB",
   email: "halo@altap.dev",
   cv: "/cv.pdf",
+  /** Foto formal rasio ±4:5 di public/images, mis. "/images/foto.jpg". Kosong = placeholder. */
+  photo: undefined as string | undefined,
   replyTime: "Balasan biasanya < 24 jam.",
   socials: [
     { label: "GitHub", short: "GH", href: "https://github.com/altap" },
