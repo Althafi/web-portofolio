@@ -4,9 +4,6 @@ Situs portofolio: aplikasi mobile dan web lengkap dengan studi kasus.
 Dibangun dengan Next.js 16 (App Router, Cache Components), React 19, Tailwind CSS v4,
 shadcn/ui, Motion, dan MDX.
 
-Rencana kerja per fase ada di [`docs/PLAN.md`](docs/PLAN.md), dan daftar data yang
-perlu disiapkan ada di [`docs/CHECKLIST-DATA.md`](docs/CHECKLIST-DATA.md).
-
 ## Menjalankan
 
 ```bash

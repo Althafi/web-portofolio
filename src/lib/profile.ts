@@ -1,6 +1,5 @@
 /**
- * Profile data — still dummy. Replace with real data in Phase 9
- * (see docs/CHECKLIST-DATA.md).
+ * Profile data: edit here to update the name, bio, socials, and experience.
  */
 
 export type SocialLink = {
