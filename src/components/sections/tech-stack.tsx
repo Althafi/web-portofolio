@@ -1,7 +1,8 @@
 import { Container } from "@/components/layout/container";
 import { Chip } from "@/components/ui/chip";
+import { TechIcon } from "@/components/ui/tech-icon";
 import { Marquee } from "@/components/effects/marquee";
-import { allTech } from "@/lib/profile";
+import { homeTech } from "@/lib/profile";
 
 export function TechStack() {
   return (
@@ -10,10 +11,13 @@ export function TechStack() {
         <h2 id="tech-stack-label" className="shrink-0 font-mono text-xs font-medium text-muted">
           TECH STACK
         </h2>
-        <Marquee label="Teknologi yang saya pakai" className="flex-1">
-          {allTech.map((tech) => (
+        <Marquee label="Technologies I use" className="flex-1">
+          {homeTech.map((tech) => (
             <li key={tech}>
-              <Chip variant="solid">{tech}</Chip>
+              <Chip variant="solid" className="gap-2">
+                <TechIcon name={tech} className="size-4" />
+                {tech}
+              </Chip>
             </li>
           ))}
         </Marquee>
