@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { ScrollToTop } from "@/components/effects/scroll-to-top";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   authors: [{ name: profile.name }],
   openGraph: {
     type: "website",
-    locale: "id_ID",
+    locale: "en_US",
     siteName: profile.name,
     url: "/",
   },
@@ -51,34 +52,36 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
   return (
     <html
-      lang="id"
+      lang="en"
       suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistMono.variable} h-full`}
     >
       <head>
-        {/* Tandai kunjungan berikutnya / reduced motion sebelum paint pertama */}
+        {/* Flag repeat visits / reduced motion before first paint */}
         <script dangerouslySetInnerHTML={{ __html: PRELOADER_SCRIPT }} />
         <noscript>
           <style>{`.preloader{display:none}.hero-word,.hero-fade{animation:none!important}`}</style>
         </noscript>
       </head>
-      <body className="flex min-h-full flex-col">
+      {/* Extensions (e.g. ColorZilla `cz-shortcut-listen`) inject attributes on <body> */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <ThemeProvider>
           <MotionProvider>
             <TooltipProvider>
               <Preloader />
               <a
-                href="#konten"
+                href="#content"
                 className="sr-only z-[110] rounded-lg bg-inverse-bg px-4 py-2 text-sm font-medium text-inverse-fg focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
               >
-                Lewati ke konten
+                Skip to content
               </a>
               <CommandMenuProvider projects={commandProjects}>
                 <Navbar />
-                <main id="konten" tabIndex={-1} className="flex-1 outline-none">
+                <main id="content" tabIndex={-1} className="flex-1 outline-none">
                   {children}
                 </main>
                 <Footer />
+                <ScrollToTop />
               </CommandMenuProvider>
               <Toaster position="bottom-center" />
             </TooltipProvider>

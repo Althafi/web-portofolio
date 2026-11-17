@@ -5,8 +5,8 @@ import { motion, useMotionValue, useSpring } from "motion/react";
 import { useRichMotion } from "@/hooks/use-reduced-motion";
 
 /**
- * (14) Glow biru yang mengikuti kursor di dalam elemen induknya.
- * Tanpa interaksi, glow diam di kanan atas (posisi di desain).
+ * (14) Blue glow that follows the cursor inside its parent element.
+ * Without interaction, the glow rests at the top right (its position in the design).
  */
 export function CursorGlow() {
   const ref = useRef<HTMLSpanElement>(null);

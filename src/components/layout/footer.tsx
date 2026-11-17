@@ -8,7 +8,9 @@ export function Footer() {
     <footer>
       <Container>
         <div className="flex flex-col gap-4 border-t border-border pt-[30px] pb-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 {profile.name}. Dibangun dengan Next.js, Tailwind &amp; Motion.</p>
+          <p>
+            &copy; <CopyrightYear /> {profile.name}. All rights reserved.
+          </p>
           <ul className="flex items-center gap-6">
             {links.map((link) => (
               <li key={link.label}>
@@ -26,4 +28,10 @@ export function Footer() {
       </Container>
     </footer>
   );
+}
+
+/** Cached so the year is captured in the static shell (required by Cache Components). */
+async function CopyrightYear() {
+  "use cache";
+  return new Date().getFullYear();
 }

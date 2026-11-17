@@ -1,12 +1,13 @@
-import { TypingTerminal } from "@/components/effects/typing-terminal";
+import type { CSSProperties } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import type { Project } from "@/lib/project-types";
+import type { Project, ProjectCover } from "@/lib/project-types";
 
-/** Posisi HP dibuat bervariasi per kartu, seperti di desain. */
+/** Phone position varies per card, as in the design. */
 const phonePlacement = [
-  "left-1/2 top-7 -translate-x-1/2", // tengah (Kasirku)
-  "left-20 top-10", // kiri (Ritme)
-  "right-[93px] top-9", // kanan (Jalur)
+  "left-1/2 top-7 -translate-x-1/2", // center (1st card)
+  "left-20 top-10", // left (2nd card)
+  "right-[93px] top-9", // right (3rd card)
 ] as const;
 
 export function PhoneMock({ variant = 0, className }: { variant?: number; className?: string }) {
@@ -37,29 +38,86 @@ export function PhoneMock({ variant = 0, className }: { variant?: number; classN
   );
 }
 
-export function TerminalMock({ lines, className }: { lines: string[]; className?: string }) {
+/** Illustration at the top of the card: a brand cover if there are screens, else a phone mock. */
+export function ProjectThumb({ project }: { project: Project }) {
+  const cover =
+    project.cover ??
+    (project.showcase?.screens?.length ? { screens: project.showcase.screens } : undefined);
+  if (cover?.screens?.length) {
+    return <BrandCover cover={{ logo: project.logo, ...cover }} name={project.title} />;
+  }
+  const variant = (project.order - 1) % phonePlacement.length;
+  return <PhoneMock variant={variant} className={phonePlacement[variant]} />;
+}
+
+/**
+ * Presentation-style cover: logo, app name and tagline on the left; a main
+ * phone plus two cropped phones on a brand-colored circle on the right.
+ * Always dark, tinted with the app's brand color (falls back to the accent).
+ */
+function BrandCover({ cover, name }: { cover: ProjectCover; name: string }) {
+  const [main, top, bottom] = cover.screens;
+  const brand = cover.color ?? "var(--accent)";
+  const style = {
+    "--brand": brand,
+    "--brand-2": cover.colorTo ?? brand,
+  } as CSSProperties;
+
   return (
     <div
-      className={cn(
-        "absolute top-[30px] right-7 left-7 h-[200px] rounded-[10px] border border-border bg-[#09090b] px-3.5 pt-3",
-        className,
-      )}
+      aria-hidden
+      style={style}
+      className="absolute inset-0 overflow-hidden bg-[color-mix(in_oklab,var(--brand)_9%,#0c0c0e)]"
     >
-      <div aria-hidden className="flex gap-1">
-        {[0, 1, 2].map((i) => (
-          <span key={i} className="size-2 rounded-full bg-[#3f3f46]" />
-        ))}
+      <span className="absolute top-1/2 -right-[64px] size-[264px] -translate-y-1/2 rounded-full bg-[linear-gradient(160deg,var(--brand),var(--brand-2))] opacity-90" />
+      <span className="absolute -top-16 -left-16 size-48 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--brand)_22%,transparent),transparent)]" />
+
+      <div className="absolute bottom-6 left-5 max-w-[42%]">
+        {cover.logo && (
+          <Image
+            src={cover.logo}
+            alt=""
+            width={36}
+            height={36}
+            className="rounded-[10px] shadow-[0_6px_16px_-6px_rgb(0_0_0/0.6)]"
+          />
+        )}
+        <p className="mt-3 text-[22px] leading-none font-semibold tracking-[-0.02em] text-white">
+          {name}
+        </p>
+        {cover.tagline && (
+          <p className="mt-1.5 text-xs leading-snug text-balance text-white/60">{cover.tagline}</p>
+        )}
+        <span className="mt-3.5 flex gap-1.5">
+          <span className="size-1.5 rounded-full bg-[var(--brand)]" />
+          <span className="size-1.5 rounded-full border border-white/40" />
+          <span className="size-1.5 rounded-full border border-white/40" />
+        </span>
       </div>
-      <TypingTerminal lines={lines} />
+
+      {top && <CoverPhone src={top} className="-top-[112px] -right-3 w-[84px]" />}
+      {bottom && <CoverPhone src={bottom} className="top-[128px] -right-3 w-[84px]" />}
+      {main && (
+        <CoverPhone
+          src={main}
+          className="top-6 right-[86px] z-10 w-[96px] motion-safe:group-hover/card:-translate-y-1.5"
+        />
+      )}
     </div>
   );
 }
 
-/** Ilustrasi di bagian atas kartu: HP untuk mobile/web, terminal untuk tools. */
-export function ProjectThumb({ project }: { project: Project }) {
-  if (project.category === "tools") {
-    return <TerminalMock lines={project.terminal ?? [`$ ${project.slug} --help`]} />;
-  }
-  const variant = (project.order - 1) % phonePlacement.length;
-  return <PhoneMock variant={variant} className={phonePlacement[variant]} />;
+function CoverPhone({ src, className }: { src: string; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "absolute rounded-[16px] bg-[#1f1f23] p-[3px] shadow-[0_18px_36px_-14px_rgb(0_0_0/0.7)] ring-1 ring-white/10 transition-transform duration-500 ease-out",
+        className,
+      )}
+    >
+      <div className="relative aspect-[9/19.5] overflow-hidden rounded-[13px] bg-bg">
+        <Image src={src} alt="" fill sizes="96px" className="object-cover object-top" />
+      </div>
+    </div>
+  );
 }

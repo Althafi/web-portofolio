@@ -13,24 +13,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { StatusPill } from "@/components/ui/status-pill";
 import { profile } from "@/lib/profile";
-import { formatTime, statusLabels, type Project } from "@/lib/project-types";
+import { formatTime, statusLabels, statusPillTone, type Project } from "@/lib/project-types";
 import { cn } from "@/lib/utils";
 
-type DemoProject = Pick<Project, "slug" | "title" | "status" | "demo" | "links" | "category">;
+type DemoProject = Pick<
+  Project,
+  "slug" | "title" | "status" | "statusNote" | "demo" | "links" | "category"
+>;
 
 /**
- * Tombol "Tonton demo" + modal. Dialog Radix otomatis mengembalikan fokus
- * ke tombol pemicu saat ditutup (Esc / klik luar / tombol ✕).
+ * "Watch demo" button + modal. The Radix dialog automatically returns focus
+ * to the trigger button when closed (Esc / outside click / ✕ button).
  */
 export function DemoDialog({
   project,
   children,
 }: {
   project: DemoProject;
-  /** Elemen pemicu (dirender dengan asChild) */
+  /** Trigger element (rendered with asChild) */
   children: React.ReactElement;
 }) {
-  // (13) Modal "membesar" dari posisi tombol pemicu
+  // (13) Modal "grows" from the trigger button's position
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
   return (
@@ -68,7 +71,7 @@ export function DemoDialog({
             className="absolute top-5 right-5 z-10 grid size-8 place-items-center rounded-full bg-surface text-fg transition-colors hover:bg-border"
           >
             <X className="size-3.5" aria-hidden />
-            <span className="sr-only">Tutup</span>
+            <span className="sr-only">Close</span>
           </button>
         </DialogClose>
       </DialogContent>
@@ -84,7 +87,7 @@ function DemoBody({ project }: { project: DemoProject }) {
   const [duration, setDuration] = useState(0);
   const [selected, setSelected] = useState(0);
 
-  // Bab aktif mengikuti posisi video; tanpa video, mengikuti pilihan terakhir.
+  // Active chapter follows the video position; without a video, the last selection.
   const active = videoFailed
     ? selected
     : Math.max(
@@ -109,11 +112,11 @@ function DemoBody({ project }: { project: DemoProject }) {
       ? (time / duration) * 100
       : 0;
 
-  const storeName = project.category === "mobile" ? "Play Store" : "rilis resmi";
+  const storeName = project.category === "mobile" ? "Play Store" : "official release";
 
   return (
     <>
-      {/* Sisi video */}
+      {/* Video side */}
       <div className="relative flex flex-col items-center justify-center overflow-hidden bg-surface px-10 py-10 md:py-0">
         <span
           aria-hidden
@@ -135,7 +138,7 @@ function DemoBody({ project }: { project: DemoProject }) {
                 onError={() => setVideoFailed(true)}
                 onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
                 onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-                aria-label={`Rekaman layar ${project.title}`}
+                aria-label={`Screen recording of ${project.title}`}
               />
             )}
             {videoFailed && (
@@ -144,7 +147,7 @@ function DemoBody({ project }: { project: DemoProject }) {
                   <Play className="ml-1 size-5" fill="currentColor" aria-hidden />
                 </span>
                 <span className="px-6 font-mono text-[11px] text-[#a1a1aa]">
-                  Rekaman segera tersedia
+                  Recording coming soon
                 </span>
               </div>
             )}
@@ -158,20 +161,20 @@ function DemoBody({ project }: { project: DemoProject }) {
         </div>
       </div>
 
-      {/* Sisi info */}
+      {/* Info side */}
       <div className="flex flex-col gap-4 p-6 sm:p-10">
-        <StatusPill className="self-start">
-          {statusLabels[project.status]} · belum di {storeName}
+        <StatusPill className="self-start" {...statusPillTone(project.status)}>
+          {statusLabels[project.status]} · {project.statusNote ?? `not on ${storeName} yet`}
         </StatusPill>
         <DialogTitle className="mt-4 text-[30px] leading-tight font-semibold tracking-[-0.02em] text-fg">
           {project.title} — demo
         </DialogTitle>
         <DialogDescription className="text-[15px] leading-normal text-muted">
-          Rekaman layar asli dari build terbaru. Klik bab di bawah untuk lompat ke fitur tertentu.
+          A real screen recording from the latest build. Click a chapter below to jump to a specific feature.
         </DialogDescription>
 
         {chapters.length > 0 && (
-          <ol aria-label="Bab rekaman">
+          <ol aria-label="Recording chapters">
             {chapters.map((chapter, i) => (
               <li key={chapter.at}>
                 <button
@@ -202,7 +205,7 @@ function DemoBody({ project }: { project: DemoProject }) {
           {project.links.apk && (
             <Button asChild variant="primary" size="md">
               <a href={project.links.apk} download>
-                Unduh APK beta
+                Download beta APK
               </a>
             </Button>
           )}
@@ -216,7 +219,7 @@ function DemoBody({ project }: { project: DemoProject }) {
         </div>
         {project.links.apk && (
           <p className="text-xs text-muted">
-            APK opsional, untuk Android 8+. Notifikasi rilis Play Store: {profile.email}
+            Optional APK, for Android 8+. For Play Store release updates: {profile.email}
           </p>
         )}
       </div>

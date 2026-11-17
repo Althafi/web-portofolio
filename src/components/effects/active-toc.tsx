@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-/** (11) Daftar isi yang menandai bagian yang sedang dibaca. */
+/** (11) Table of contents that highlights the section being read. */
 export function ActiveToc({ items }: { items: { id: string; title: string }[] }) {
   const [active, setActive] = useState(items[0]?.id);
 
@@ -18,7 +18,7 @@ export function ActiveToc({ items }: { items: { id: string; title: string }[] })
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) visible.set(entry.target.id, entry.isIntersecting);
-        // Bagian aktif = judul terakhir yang sudah melewati 30% atas layar
+        // Active section = the last heading that has passed the top 30% of the viewport
         const passed = headings.filter(
           (h) => h.getBoundingClientRect().top < window.innerHeight * 0.3,
         );
@@ -29,7 +29,7 @@ export function ActiveToc({ items }: { items: { id: string; title: string }[] })
     );
     headings.forEach((h) => observer.observe(h));
 
-    // Sampai di dasar halaman → tandai bagian terakhir
+    // Reached the bottom of the page → mark the last section
     const onScroll = () => {
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
         setActive(headings.at(-1)!.id);
@@ -43,8 +43,8 @@ export function ActiveToc({ items }: { items: { id: string; title: string }[] })
   }, [items]);
 
   return (
-    <nav aria-label="Di halaman ini" className="relative border-l border-border py-1 pl-4">
-      <p className="text-label text-muted">Di halaman ini</p>
+    <nav aria-label="On this page" className="relative border-l border-border py-1 pl-4">
+      <p className="text-label text-muted">On this page</p>
       <ul className="mt-2.5 space-y-2.5">
         {items.map((item) => {
           const isActive = active === item.id;

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * (04) Marquee tak berujung (CSS), berhenti saat hover/fokus.
- * Daftar digandakan untuk loop mulus; salinan kedua disembunyikan dari pembaca layar.
+ * (04) Endless marquee (CSS) that pauses on hover/focus.
+ * The list is duplicated for a seamless loop; the second copy is hidden from screen readers.
  */
 export function Marquee({
   children,

@@ -3,8 +3,8 @@
 import dynamic from "next/dynamic";
 
 /**
- * (8.3) Efek dekoratif dimuat terpisah (lazy) supaya bundle awal ringan.
- * Keduanya murni hiasan, jadi tidak perlu dirender di server.
+ * (8.3) Decorative effects are loaded separately (lazy) to keep the initial bundle light.
+ * Both are purely decorative, so they don't need server rendering.
  */
 export const LazyDotGrid = dynamic(
   () => import("@/components/effects/dot-grid").then((m) => m.DotGrid),

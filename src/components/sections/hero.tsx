@@ -15,9 +15,8 @@ function statsLine(counts: CategoryCounts) {
   const parts = [
     counts.mobile ? `${counts.mobile} mobile` : null,
     counts.web ? `${counts.web} web` : null,
-    counts.tools ? `${counts.tools} CLI` : null,
   ].filter(Boolean);
-  if (!counts.web) parts.push("web segera");
+  if (!counts.web) parts.push("web soon");
   return parts.join(" · ");
 }
 
@@ -46,13 +45,13 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
 
           <div className="hero-fade mt-[29px] flex flex-wrap items-center gap-2.5 [--d:0.7s]">
             <Button asChild variant="primary" size="md">
-              <Link href="/proyek">
-                Lihat proyek <ArrowRight className="size-4" aria-hidden />
+              <Link href="/projects">
+                View projects <ArrowRight className="size-4" aria-hidden />
               </Link>
             </Button>
             <Button asChild variant="secondary" size="md">
-              <a href={profile.cv} download>
-                Unduh CV
+              <a href={profile.cv} target="_blank" rel="noreferrer">
+                View CV
               </a>
             </Button>
             <span aria-hidden className="mx-0.5 hidden h-6 w-px bg-border sm:block" />
@@ -73,7 +72,7 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
           </div>
         </div>
 
-        {/* Kartu avatar + chip mengambang */}
+        {/* Avatar card + floating chips */}
         <div className="hero-fade relative mx-auto w-full max-w-[340px] [--d:0.35s] lg:mx-0">
           <TiltCard>
             <AvatarCard />
@@ -85,7 +84,7 @@ export function Hero({ counts }: { counts: CategoryCounts }) {
           </div>
 
           <div className="float-slow-2 absolute bottom-3.5 -left-3 w-[200px] rounded-[14px] border border-border bg-bg px-4 py-3 shadow-[0_8px_24px_rgb(0_0_0/0.1)] sm:-left-12">
-            <p className="text-base font-semibold text-fg">{counts.all} proyek dibangun</p>
+            <p className="text-base font-semibold text-fg">{counts.all} projects built</p>
             <p className="mt-0.5 text-[13px] text-muted">{statsLine(counts)}</p>
           </div>
         </div>

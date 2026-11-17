@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useSpring } from "motion/react";
 
-/** (11) Bar progres baca tipis di atas halaman. */
+/** (11) Thin reading progress bar at the top of the page. */
 export function ReadingProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, mass: 0.3 });

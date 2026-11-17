@@ -2,7 +2,7 @@ import Image from "next/image";
 import { profile } from "@/lib/profile";
 import { cn } from "@/lib/utils";
 
-/** Kartu foto. Menampilkan placeholder sampai `profile.photo` diisi (Fase 9). */
+/** Photo card. Shows a placeholder until `profile.photo` is set (Phase 9). */
 export function AvatarCard({ className }: { className?: string }) {
   return (
     <div
@@ -14,7 +14,7 @@ export function AvatarCard({ className }: { className?: string }) {
       {profile.photo ? (
         <Image
           src={profile.photo}
-          alt={`Foto ${profile.name}`}
+          alt={`Photo of ${profile.name}`}
           fill
           priority
           sizes="(min-width: 1024px) 340px, 90vw"
@@ -22,7 +22,7 @@ export function AvatarCard({ className }: { className?: string }) {
         />
       ) : (
         <>
-          <span className="absolute top-[18px] left-5 font-mono text-[11px] text-muted">FOTO</span>
+          <span className="absolute top-[18px] left-5 font-mono text-[11px] text-muted">PHOTO</span>
           <span
             aria-hidden
             className="absolute top-[28.5%] left-1/2 size-[35%] -translate-x-1/2 rounded-full bg-border"
@@ -31,7 +31,7 @@ export function AvatarCard({ className }: { className?: string }) {
             aria-hidden
             className="absolute top-[62%] left-1/2 h-[48%] w-[65%] -translate-x-1/2 rounded-t-[110px] bg-border"
           />
-          <span className="sr-only">Foto {profile.name} (belum tersedia)</span>
+          <span className="sr-only">Photo of {profile.name} (not yet available)</span>
         </>
       )}
     </div>

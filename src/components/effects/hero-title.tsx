@@ -6,14 +6,14 @@ import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * (02) Judul hero: muncul per kata (blur → tajam, CSS) lalu kata
- * "mobile", "web", dan "CLI" bergantian berputar seperti mesin slot.
- * Teks lengkap tetap ada untuk pembaca layar lewat aria-label.
+ * (02) Hero title: appears word by word (blur → sharp, CSS), then the words
+ * "mobile" and "web" take turns spinning like a slot machine.
+ * The full text stays available to screen readers via aria-label.
  */
 
 type Props = {
   text: string;
-  /** Kata yang ikut "berputar" bergantian */
+  /** Words that take turns "spinning" */
   slots: readonly string[];
   className?: string;
   id?: string;
@@ -77,7 +77,7 @@ export function HeroTitle({ text, slots, className, id }: Props) {
 function SlotWord({ word, spinning }: { word: string; spinning: boolean }) {
   const [turn, setTurn] = useState(0);
   const [prev, setPrev] = useState(spinning);
-  // Setiap kali kata ini mendapat giliran, naikkan "putaran" supaya animasi jalan
+  // Each time this word gets its turn, bump the "spin" so the animation runs
   if (spinning !== prev) {
     setPrev(spinning);
     if (spinning) setTurn((t) => t + 1);

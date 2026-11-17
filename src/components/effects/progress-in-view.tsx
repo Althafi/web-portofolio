@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "motion/react";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 
-/** (12) Bar progres yang terisi 0 → nilai saat terlihat. */
+/** (12) Progress bar that fills 0 → value when it comes into view. */
 export function ProgressInView({ value, label }: { value: number; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.8 });

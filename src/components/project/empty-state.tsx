@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-export function EmptyState({ badge = "Segera", title, description, className }: Props) {
+export function EmptyState({ badge = "Soon", title, description, className }: Props) {
   return (
     <div
       className={cn(

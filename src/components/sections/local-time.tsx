@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { profile } from "@/lib/profile";
 
-const formatter = new Intl.DateTimeFormat("id-ID", {
+const formatter = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
@@ -18,7 +18,7 @@ function subscribe(callback: () => void) {
 const getSnapshot = () => formatter.format(new Date()).replace(".", ":");
 const getServerSnapshot = () => "--:--";
 
-/** Jam lokal (WIB) yang diperbarui berkala. Di server tampil "--:--". */
+/** Local time (WIB), refreshed periodically. Renders "--:--" on the server. */
 export function LocalTime() {
   const time = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   return (

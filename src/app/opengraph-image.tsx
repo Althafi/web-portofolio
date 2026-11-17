@@ -7,8 +7,8 @@ export const contentType = "image/png";
 
 export default async function Image() {
   return renderOg({
-    eyebrow: "Portofolio",
+    eyebrow: "Portfolio",
     title: profile.headline,
-    description: "Aplikasi mobile, web, dan tools CLI — lengkap dengan studi kasusnya.",
+    description: "Mobile and web apps — each with its own case study.",
   });
 }

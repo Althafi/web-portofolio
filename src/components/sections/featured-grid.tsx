@@ -4,25 +4,30 @@ import { EmptyState } from "@/components/project/empty-state";
 import { FilterTabs, type Filter } from "@/components/project/filter-tabs";
 import { AnimatedProjectGrid } from "@/components/project/animated-grid";
 import { useCategoryFilter } from "@/hooks/use-category-filter";
-import { categoryLabels, type CategoryCounts, type Project } from "@/lib/project-types";
+import {
+  categoryLabels,
+  homeCategories,
+  type CategoryCounts,
+  type Project,
+} from "@/lib/project-types";
 
 type Props = { projects: Project[]; counts: CategoryCounts };
 
+/** Up to 3 cards: featured projects first, then the rest by order. */
 function pick(projects: Project[], filter: Filter) {
-  if (filter === "all") return projects.filter((p) => p.featured).slice(0, 3);
   return projects
-    .filter((p) => p.category === filter)
+    .filter((p) => filter === "all" || p.category === filter)
     .sort((a, b) => Number(b.featured) - Number(a.featured) || a.order - b.order)
     .slice(0, 3);
 }
 
-/** Versi dengan state di URL — harus dirender di dalam <Suspense>. */
+/** URL-state version — must be rendered inside <Suspense>. */
 export function FeaturedGrid(props: Props) {
-  const [filter, setFilter] = useCategoryFilter();
+  const [filter, setFilter] = useCategoryFilter(homeCategories);
   return <FeaturedGridView {...props} filter={filter} onFilterChange={setFilter} />;
 }
 
-/** Fallback statis saat prerender. */
+/** Static fallback during prerender. */
 export function FeaturedGridStatic(props: Props) {
   return <FeaturedGridView {...props} filter="all" />;
 }
@@ -37,14 +42,20 @@ function FeaturedGridView({
 
   return (
     <>
-      <FilterTabs counts={counts} value={filter} onChange={onFilterChange} className="mt-[35px]" />
+      <FilterTabs
+        counts={counts}
+        value={filter}
+        onChange={onFilterChange}
+        categories={homeCategories}
+        className="mt-[35px]"
+      />
       {items.length > 0 ? (
         <AnimatedProjectGrid projects={items} className="mt-8" />
       ) : (
         <EmptyState
           className="mt-8"
-          title={`Belum ada proyek ${categoryLabels[filter as Exclude<Filter, "all">].toLowerCase()}`}
-          description="Proyek di kategori ini sedang dikerjakan. Kartu akan muncul otomatis di sini setelah rilis."
+          title={`No ${categoryLabels[filter as Exclude<Filter, "all">].toLowerCase()} projects yet`}
+          description="Projects in this category are in the works. Cards will show up here automatically once they ship."
         />
       )}
     </>

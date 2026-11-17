@@ -12,10 +12,10 @@ export function CopyEmailButton() {
       variant="ghost"
       size="md"
       onClick={copy}
-      aria-label={`Salin alamat email ${profile.email}`}
+      aria-label={`Copy email address ${profile.email}`}
       className="border-inverse-fg/80 font-mono text-sm font-normal text-inverse-fg hover:bg-inverse-fg/10 hover:text-inverse-fg dark:hover:bg-inverse-fg/10"
     >
-      Salin: {profile.email}
+      Copy: {profile.email}
     </Button>
   );
 }

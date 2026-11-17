@@ -15,13 +15,13 @@ export function Navbar() {
   const pathname = usePathname();
   const commandMenu = useCommandMenu();
   const [scrolled, setScrolled] = useState(false);
-  // Menu mobile otomatis tertutup saat pindah halaman (terikat ke pathname)
+  // Mobile menu closes automatically on navigation (tied to pathname)
   const [menuFor, setMenuFor] = useState<string | null>(null);
   const menuOpen = menuFor === pathname;
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // (08) Navbar menempel dengan blur setelah halaman digulir
+  // (08) Navbar sticks with a blur once the page is scrolled
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -29,7 +29,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Menu mobile: fokus ke link pertama, Esc menutup & mengembalikan fokus
+  // Mobile menu: focus the first link, Esc closes & restores focus
   useEffect(() => {
     if (!menuOpen) return;
     panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
@@ -51,10 +51,10 @@ export function Navbar() {
       )}
       style={{ viewTransitionName: "site-header" }}
     >
-      <Container className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+      <Container className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 lg:grid-cols-[1fr_auto_1fr]">
         <Logo className="justify-self-start" />
 
-        <nav aria-label="Navigasi utama" className="hidden md:block">
+        <nav aria-label="Main navigation" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {navLinks.map((link) => {
               const active = isActive(pathname, link.href);
@@ -81,10 +81,10 @@ export function Navbar() {
             type="button"
             onClick={commandMenu.open}
             aria-haspopup="dialog"
-            aria-label="Cari (⌘K)"
+            aria-label="Search (⌘K)"
             className="hidden h-9 w-[172px] items-center justify-between rounded-lg border border-border pr-[7px] pl-3 text-sm text-muted transition-colors hover:text-fg sm:flex"
           >
-            Cari…
+            Search…
             <kbd className="grid h-[22px] place-items-center rounded-[5px] bg-surface px-[7px] font-mono text-[11px] font-medium text-muted">
               ⌘K
             </kbd>
@@ -93,7 +93,7 @@ export function Navbar() {
             type="button"
             onClick={commandMenu.open}
             aria-haspopup="dialog"
-            aria-label="Cari"
+            aria-label="Search"
             className="grid size-9 place-items-center rounded-lg border border-border text-fg sm:hidden"
           >
             <Search className="size-4" aria-hidden />
@@ -103,19 +103,28 @@ export function Navbar() {
             ref={menuButtonRef}
             type="button"
             aria-expanded={menuOpen}
-            aria-controls="menu-mobile"
-            aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
             onClick={() => setMenuFor(menuOpen ? null : pathname)}
-            className="grid size-9 place-items-center rounded-lg border border-border text-fg md:hidden"
+            className="grid size-9 place-items-center rounded-lg border border-border text-fg lg:hidden"
           >
-            {menuOpen ? <X className="size-4" aria-hidden /> : <Menu className="size-4" aria-hidden />}
+            {menuOpen ? (
+              <X className="size-4" aria-hidden />
+            ) : (
+              <Menu className="size-4" aria-hidden />
+            )}
           </button>
         </div>
       </Container>
 
-      {/* Menu mobile */}
-      <div ref={panelRef} id="menu-mobile" hidden={!menuOpen} className="border-t border-border md:hidden">
-        <nav aria-label="Navigasi mobile">
+      {/* Mobile menu */}
+      <div
+        ref={panelRef}
+        id="mobile-menu"
+        hidden={!menuOpen}
+        className="border-t border-border lg:hidden"
+      >
+        <nav aria-label="Mobile navigation">
           <Container className="py-3">
             <ul className="flex flex-col">
               {navLinks.map((link) => {

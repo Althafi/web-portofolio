@@ -5,17 +5,23 @@ import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "
 import { profile } from "@/lib/profile";
 
 /**
- * (00) Preloader "3 bentuk → 1 nama" — hanya saat kunjungan pertama per sesi.
+ * (00) "2 shapes → 1 cursor → 1 name" preloader — only on the first visit per session.
  *
- * 0,0 dtk  ikon HP, browser & terminal muncul bergantian
- * 0,45 dtk ketiganya tertarik ke tengah, berputar, lalu meleleh jadi blob biru
- * 0,85 dtk nama ter-decode dari karakter acak
- * 1,4 dtk  blob + nama mengecil & terbang ke posisi logo navbar, halaman masuk
+ * 0.0 s   phone & browser icons appear one after another
+ * 1.5 s   both are pulled to the center, spin, then melt into a blue block cursor
+ * 2.4 s   the cursor types the name (`Althafi Hilal Anshar▌`), then blinks
+ * ~5.3 s  name + cursor shrink & glide to the navbar logo while the overlay fades out
+ * ~6.6 s  overlay removed
  *
- * Skrip di <head> (PRELOADER_SCRIPT) menandai <html data-preloaded> untuk
- * kunjungan berikutnya, reduced motion, dan perangkat sentuh (demi performa HP) sehingga overlay langsung disembunyikan
- * lewat CSS. Pada kunjungan pertama ia menandai <html data-preloading> supaya
- * logo navbar disembunyikan sampai salinan dari preloader "mendarat".
+ * The fly/off times are derived from the name length, so a longer or shorter name
+ * still gets the same pause (one cursor blink) after typing.
+ *
+ * All timings live in TIMELINE so the pace can be tuned in one place.
+ *
+ * The <head> script (PRELOADER_SCRIPT) sets <html data-preloaded> for repeat
+ * visits, reduced motion, and touch devices (for phone performance) so the overlay
+ * is hidden right away via CSS. On the first visit it sets <html data-preloading> so
+ * the navbar logo stays hidden until the preloader's copy "lands".
  */
 
 export const PRELOADER_KEY = "altap:preloaded";
@@ -25,6 +31,17 @@ export const PRELOADER_SCRIPT = `(function(){var d=document.documentElement;try{
 type Phase = "pending" | "icons" | "merge" | "name" | "fly" | "off";
 
 const ease = [0.2, 0.8, 0.2, 1] as const;
+const smooth = [0.65, 0, 0.35, 1] as const;
+
+/** Phase start times (ms). */
+/** Typing: wait before the first key, then 55–105 ms per key (≈ 80 ms average). */
+const TYPE_DELAY = 300;
+const TYPE_MIN = 55;
+const TYPE_JITTER = 50;
+const typeEnd = 2400 + TYPE_DELAY + profile.handle.length * (TYPE_MIN + TYPE_JITTER / 2);
+const fly = Math.round(typeEnd + 900);
+const TIMELINE = { merge: 1500, name: 2400, fly, off: fly + 1300, safety: fly + 3500 } as const;
+const FLY_DURATION = 1.1;
 
 function finish() {
   const root = document.documentElement;
@@ -53,24 +70,27 @@ export function Preloader() {
 
     root.dataset.preloading = "1";
     document.body.style.overflow = "hidden";
-    const counter = animate(progress, 100, { duration: 1.35, ease: [0.4, 0, 0.2, 1] });
+    const counter = animate(progress, 100, {
+      duration: (TIMELINE.fly - 150) / 1000,
+      ease: [0.45, 0, 0.25, 1],
+    });
     later(0, () => setPhase("icons"));
-    later(450, () => setPhase("merge"));
-    later(850, () => setPhase("name"));
-    later(1400, () => {
+    later(TIMELINE.merge, () => setPhase("merge"));
+    later(TIMELINE.name, () => setPhase("name"));
+    later(TIMELINE.fly, () => {
       try {
         sessionStorage.setItem(PRELOADER_KEY, "1");
       } catch {}
-      // Halaman mulai masuk (judul hero dsb.) bersamaan dengan logo terbang
+      // The page starts entering (hero title etc.) while the logo flies
       root.dataset.preloaded = "1";
       setPhase("fly");
     });
-    later(2050, () => {
+    later(TIMELINE.off, () => {
       finish();
       setPhase("off");
     });
-    // Pengaman: apa pun yang terjadi, overlay hilang setelah 4 detik
-    later(4000, () => {
+    // Safety net: whatever happens, the overlay disappears eventually
+    later(TIMELINE.safety, () => {
       finish();
       setPhase("off");
     });
@@ -82,7 +102,7 @@ export function Preloader() {
     };
   }, [progress]);
 
-  // Terbang ke logo navbar: ukur posisi tujuan lalu animasikan x/y/scale
+  // Fly to the navbar logo: measure the target position, then animate x/y/scale
   useEffect(() => {
     if (phase !== "fly") return;
     const pairs: [HTMLElement | null, Element | null][] = [
@@ -98,7 +118,7 @@ export function Preloader() {
         animate(
           from,
           { x: b.left - a.left, y: b.top - a.top, scale: b.height / a.height },
-          { duration: 0.6, ease: [0.65, 0, 0.25, 1] },
+          { duration: FLY_DURATION, ease: smooth },
         ),
       ];
     });
@@ -116,7 +136,7 @@ export function Preloader() {
           <motion.div
             className="pointer-events-auto absolute inset-0 bg-bg"
             animate={{ opacity: phase === "fly" ? 0 : 1 }}
-            transition={{ duration: 0.45, delay: 0.1 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: smooth }}
           />
           {phase !== "pending" && (
             <>
@@ -124,27 +144,21 @@ export function Preloader() {
                 {phase === "icons" || phase === "merge" ? (
                   <Shapes merging={phase === "merge"} />
                 ) : (
-                  <div className="flex items-center gap-4">
-                    <motion.span
-                      ref={markRef}
-                      className="block size-[60px] rounded-[6px_33px_33px_33px] bg-accent"
-                    />
-                    <span
-                      ref={textRef}
-                      className="block text-[64px] leading-none font-semibold tracking-[-0.04em] text-fg"
-                    >
-                      <Scramble text={profile.handle} />
-                    </span>
-                  </div>
+                  <TypedName
+                    text={profile.handle}
+                    textRef={textRef}
+                    markRef={markRef}
+                    blink={phase === "name"}
+                  />
                 )}
               </div>
 
               <motion.div
                 animate={{ opacity: phase === "fly" ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.5, ease: smooth }}
               >
                 <div className="absolute inset-x-7 bottom-6 flex items-center justify-between font-mono text-xs">
-                  <span className="text-muted">Memuat portofolio…</span>
+                  <span className="text-muted">Loading portfolio…</span>
                   <motion.span className="font-medium text-fg">{percent}</motion.span>
                 </div>
                 <motion.div
@@ -160,29 +174,20 @@ export function Preloader() {
   );
 }
 
-/** Ikon HP, browser, dan terminal (mewakili 3 kategori proyek). */
+/** Phone and browser icons (representing the 2 project categories). */
 function Shapes({ merging }: { merging: boolean }) {
   const items = [
     {
       label: "mobile",
-      x: -96,
+      x: -56,
       shape: <span className="block h-[52px] w-[30px] rounded-lg border-2 border-fg" />,
     },
     {
       label: "web",
-      x: 0,
+      x: 56,
       shape: (
         <span className="block h-[42px] w-14 rounded-[7px] border-2 border-fg">
           <span className="mt-2 block h-0.5 bg-fg" />
-        </span>
-      ),
-    },
-    {
-      label: "tools",
-      x: 96,
-      shape: (
-        <span className="grid h-[42px] w-14 place-items-center rounded-[7px] bg-fg font-mono text-base font-bold text-accent">
-          &gt;_
         </span>
       ),
     },
@@ -202,8 +207,8 @@ function Shapes({ merging }: { merging: boolean }) {
           }
           transition={
             merging
-              ? { duration: 0.38, ease }
-              : { delay: i * 0.09, type: "spring", stiffness: 380, damping: 22 }
+              ? { duration: 0.8, ease }
+              : { delay: 0.15 + i * 0.25, type: "spring", stiffness: 170, damping: 20 }
           }
         >
           <span className="grid h-[52px] place-items-center">{item.shape}</span>
@@ -211,42 +216,89 @@ function Shapes({ merging }: { merging: boolean }) {
         </motion.div>
       ))}
       {merging && (
+        // Same size & spot as the cursor in <TypedName>, so the hand-off is seamless
         <motion.span
-          className="absolute top-[18px] left-1/2 -ml-[30px] block size-[60px] rounded-[6px_33px_33px_33px] bg-accent"
-          initial={{ scale: 0, rotate: -40 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ delay: 0.18, type: "spring", stiffness: 420, damping: 18 }}
+          className="absolute top-4 left-1/2 -ml-4 block h-16 w-8 rounded-[6px] bg-accent"
+          initial={{ scaleY: 0, opacity: 0 }}
+          animate={{ scaleY: 1, opacity: 1 }}
+          transition={{ delay: 0.4, type: "spring", stiffness: 220, damping: 20 }}
         />
       )}
     </div>
   );
 }
 
-const GLYPHS = "abcdefghijklmnopqrstuvwxyz#%&*/<>";
-
-/** Nama ter-decode dari karakter acak. */
-function Scramble({ text }: { text: string }) {
-  const [output, setOutput] = useState(() => text.replace(/./g, "·"));
+/**
+ * The cursor types the name. The text box grows to each typed prefix (measured from a
+ * hidden copy) with a short tween, so the cursor glides right instead of jumping.
+ * Cursor is 32×64 → lands as the navbar's 9×18 cursor (scale 18/64).
+ */
+function TypedName({
+  text,
+  textRef,
+  markRef,
+  blink,
+}: {
+  text: string;
+  textRef: React.Ref<HTMLSpanElement>;
+  markRef: React.Ref<HTMLSpanElement>;
+  blink: boolean;
+}) {
+  const [count, setCount] = useState(0);
+  const [width, setWidth] = useState(0);
+  const measureRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    let frame = 0;
-    const total = 12;
-    const id = window.setInterval(() => {
-      frame++;
-      const revealed = Math.floor((frame / total) * text.length);
-      setOutput(
-        text
-          .split("")
-          .map((ch, i) => (i < revealed ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]))
-          .join(""),
-      );
-      if (frame >= total) {
-        window.clearInterval(id);
-        setOutput(text);
+    let typed = 0;
+    let id = 0;
+    const tick = () => {
+      typed++;
+      const measure = measureRef.current;
+      if (measure) {
+        const left = measure.getBoundingClientRect().left;
+        const char = measure.children[typed - 1];
+        const right =
+          typed >= text.length
+            ? measure.getBoundingClientRect().right
+            : char.getBoundingClientRect().right;
+        setWidth(Math.ceil(right - left));
       }
-    }, 38);
-    return () => window.clearInterval(id);
+      setCount(typed);
+      if (typed < text.length) id = window.setTimeout(tick, TYPE_MIN + Math.random() * TYPE_JITTER);
+    };
+    id = window.setTimeout(tick, TYPE_DELAY);
+    return () => window.clearTimeout(id);
   }, [text]);
 
-  return <>{output}</>;
+  const done = count >= text.length;
+
+  return (
+    <div className="flex items-center">
+      <motion.span
+        ref={textRef}
+        className="relative block overflow-x-clip text-[64px] leading-none font-semibold tracking-[-0.04em] whitespace-nowrap text-fg"
+        initial={{ width: 0 }}
+        animate={{ width }}
+        transition={{ duration: 0.16, ease: "easeOut" }}
+      >
+        <span ref={measureRef} aria-hidden className="invisible absolute top-0 left-0">
+          {text.split("").map((ch, i) => (
+            <span key={i}>{ch}</span>
+          ))}
+        </span>
+        {text.slice(0, count)}
+      </motion.span>
+      <motion.span
+        className="block"
+        initial={{ width: 0 }}
+        animate={{ width: count ? 10 : 0 }}
+        transition={{ duration: 0.16, ease: "easeOut" }}
+      />
+      {/* Solid while typing (like a real terminal), blinks once the name is done */}
+      <span
+        ref={markRef}
+        className={`block h-16 w-8 shrink-0 rounded-[6px] bg-accent ${done && blink ? "caret" : ""}`}
+      />
+    </div>
+  );
 }

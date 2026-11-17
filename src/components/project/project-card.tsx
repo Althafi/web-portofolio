@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
+import { TechIcon } from "@/components/ui/tech-icon";
 import { StatusPill } from "@/components/ui/status-pill";
 import { ProjectThumb } from "@/components/project/project-thumb";
 import { DemoDialog } from "@/components/project/demo-dialog";
@@ -13,6 +14,7 @@ import {
   isReleased,
   primaryAction,
   statusLabels,
+  statusPillTone,
   storeLinks,
   type Project,
 } from "@/lib/project-types";
@@ -28,13 +30,13 @@ export function ProjectCard({ project, className }: { project: Project; classNam
     <article
       ref={ref}
       aria-label={project.title}
-      className={cn("group/card relative h-[436px] [perspective:1400px]", className)}
+      className={cn("group/card relative h-[472px] [perspective:1400px]", className)}
     >
-      {/* Tombol flip ditaruh sebelum kedua sisi supaya urutan Tab-nya logis */}
+      {/* The flip button comes before both faces so the Tab order is logical */}
       <button
         type="button"
         aria-pressed={flipped}
-        aria-label={`Balik kartu ${project.title}: ${flipped ? "kembali ke depan" : "lihat angka & sorotan"}`}
+        aria-label={`Flip ${project.title} card: ${flipped ? "back to front" : "see numbers & highlights"}`}
         onClick={() => setFlipped((v) => !v)}
         className={cn(
           "absolute z-20 grid size-8 place-items-center rounded-full border text-[15px] font-medium transition-all duration-300",
@@ -60,8 +62,8 @@ export function ProjectCard({ project, className }: { project: Project; classNam
 }
 
 /**
- * Sisi yang tidak aktif disembunyikan sepenuhnya setelah animasi flip (500 ms)
- * supaya tidak terbaca pembaca layar / alat audit kontras.
+ * The inactive face is fully hidden after the flip animation (500 ms)
+ * so screen readers / contrast audit tools don't pick it up.
  */
 function faceVisibility(hidden: boolean) {
   return hidden
@@ -80,7 +82,7 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
         faceVisibility(hidden),
       )}
     >
-      {/* (05) Spotlight biru mengikuti kursor */}
+      {/* (05) Blue spotlight follows the cursor */}
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
@@ -89,12 +91,12 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
             "radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--accent) 16%, transparent), transparent 70%)",
         }}
       />
-      {/* (10) Thumbnail "terbang" menjadi showcase di halaman detail */}
+      {/* (10) Thumbnail "flies" into the showcase on the detail page */}
       <ViewTransition name={`project-${project.slug}`} share="morph" default="none">
         <div className="relative h-[220px] shrink-0 overflow-hidden border-b border-border bg-surface">
           <ProjectThumb project={project} />
           {!isReleased(project) && (
-            <StatusPill className="absolute top-3 left-3" pulse>
+            <StatusPill className="absolute top-3 left-3" {...statusPillTone(project.status)}>
               {statusLabels[project.status]}
             </StatusPill>
           )}
@@ -108,10 +110,13 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
         </div>
         <h3 className="mt-3 text-h4 text-fg">{project.title}</h3>
         <p className="mt-1.5 line-clamp-2 text-sm leading-normal text-muted">{project.summary}</p>
-        <ul className="mt-2.5 flex flex-wrap gap-1.5 overflow-hidden" aria-label="Tech stack">
+        <ul className="mt-2.5 flex max-h-[54px] flex-wrap gap-1.5 overflow-hidden" aria-label="Tech stack">
           {project.stack.slice(0, 3).map((tech) => (
-            <li key={tech}>
-              <Chip>{tech}</Chip>
+            <li key={tech} className="flex">
+              <Chip className="gap-1.5">
+                <TechIcon name={tech} className="size-3" />
+                {tech}
+              </Chip>
             </li>
           ))}
         </ul>
@@ -119,10 +124,10 @@ function CardFront({ project, hidden }: { project: Project; hidden: boolean }) {
 
       <div className="flex h-10 items-center justify-between border-t border-border px-5 text-[13px]">
         <Link
-          href={`/proyek/${project.slug}`}
+          href={`/projects/${project.slug}`}
           className="font-medium text-fg underline-offset-4 after:absolute after:inset-0 after:content-[''] hover:underline"
         >
-          Lihat detail<span aria-hidden>&nbsp;&nbsp;→</span>
+          View details<span aria-hidden>&nbsp;&nbsp;→</span>
           <span className="sr-only">: {project.title}</span>
         </Link>
         {action?.kind === "demo" && (
@@ -182,7 +187,7 @@ function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
       ) : null}
 
       <div>
-        <p className="font-mono text-[11px] text-inverse-fg/60">SOROTAN</p>
+        <p className="font-mono text-[11px] text-inverse-fg/60">HIGHLIGHTS</p>
         <ul className="mt-2.5 space-y-1 text-sm">
           {project.highlights.slice(0, 3).map((h) => (
             <li key={h}>{h}</li>
@@ -192,8 +197,8 @@ function CardBack({ project, hidden }: { project: Project; hidden: boolean }) {
 
       <div className="mt-auto grid grid-cols-2 gap-2">
         <Button asChild variant="accent" size="md-sm">
-          <Link href={`/proyek/${project.slug}`}>
-            Studi kasus <span aria-hidden>→</span>
+          <Link href={`/projects/${project.slug}`}>
+            Case study <span aria-hidden>→</span>
           </Link>
         </Button>
         {secondary && (

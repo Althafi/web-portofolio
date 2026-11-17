@@ -5,7 +5,7 @@ import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } fr
 import { useRichMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
-/** (03) Tilt 3D mengikuti kursor + kilau (sheen). Mati di layar sentuh/reduced motion. */
+/** (03) 3D tilt that follows the cursor + sheen. Disabled on touch screens/reduced motion. */
 export function TiltCard({
   children,
   className,

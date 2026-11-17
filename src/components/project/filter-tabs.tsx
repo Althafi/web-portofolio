@@ -12,10 +12,12 @@ import { cn } from "@/lib/utils";
 
 export type Filter = Category | "all";
 
-export const filterOptions: { value: Filter; label: string }[] = [
-  { value: "all", label: "Semua" },
-  ...categories.map((c) => ({ value: c, label: categoryLabels[c] })),
-];
+function filterOptions(shown: readonly Category[]): { value: Filter; label: string }[] {
+  return [
+    { value: "all", label: "All" },
+    ...shown.map((c) => ({ value: c, label: categoryLabels[c] })),
+  ];
+}
 
 type Props = {
   counts: CategoryCounts;
@@ -23,15 +25,18 @@ type Props = {
   onChange?: (value: Filter) => void;
   className?: string;
   label?: string;
+  /** Categories to offer as tabs (defaults to all). */
+  categories?: readonly Category[];
 };
 
-/** Segmented control filter kategori dengan jumlah proyek. */
+/** Segmented control for category filtering, with project counts. */
 export function FilterTabs({
   counts,
   value,
   onChange,
   className,
-  label = "Filter kategori",
+  label = "Filter by category",
+  categories: shown = categories,
 }: Props) {
   const id = useId();
   return (
@@ -44,7 +49,7 @@ export function FilterTabs({
           className,
         )}
       >
-        {filterOptions.map((opt) => {
+        {filterOptions(shown).map((opt) => {
           const active = opt.value === value;
           return (
             <button
@@ -58,7 +63,7 @@ export function FilterTabs({
                 active ? "text-fg" : "text-muted hover:text-fg",
               )}
             >
-              {/* (06) Indikator meluncur antar-tab */}
+              {/* (06) Indicator slides between tabs */}
               {active && (
                 <motion.span
                   layoutId="tab-indicator"

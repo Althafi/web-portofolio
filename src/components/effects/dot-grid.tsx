@@ -5,10 +5,10 @@ import { useRichMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * (01) Partikel dot-grid di canvas. Titik menjauh dari kursor lalu kembali
- * seperti pegas. Loop berhenti saat semua titik diam, tab tidak terlihat,
- * atau hero keluar viewport. Di perangkat sentuh / reduced motion: grid statis
- * dengan jarak lebih renggang (lebih sedikit titik).
+ * (01) Dot-grid particles on a canvas. Dots move away from the cursor, then spring
+ * back. The loop stops when every dot is at rest, the tab is hidden, or the hero
+ * leaves the viewport. On touch devices / reduced motion: a static grid with
+ * wider spacing (fewer dots).
  */
 
 type Dot = { x: number; y: number; dx: number; dy: number; vx: number; vy: number; a: number };
@@ -50,7 +50,7 @@ export function DotGrid({ className }: { className?: string }) {
       canvas!.height = Math.round(height * dpr);
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Kepadatan memusat di kanan-tengah, memudar ke tepi (seperti desain)
+      // Density centers on the middle-right and fades toward the edges (as in the design)
       const cx = width * 0.62;
       const cy = height * 0.45;
       const maxR = Math.max(width * 0.55, 420);

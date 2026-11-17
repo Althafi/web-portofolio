@@ -11,15 +11,15 @@ type Props = {
 
 export function FeaturedProjects({ projects, counts }: Props) {
   return (
-    <section aria-labelledby="proyek-pilihan" className="pt-20">
+    <section aria-labelledby="featured-projects" className="pt-20">
       <Container>
         <SectionHeading
-          id="proyek-pilihan"
-          title="Proyek pilihan"
-          description="Beberapa hal yang sudah saya bangun dan rilis."
-          action={{ label: "Semua proyek", href: "/proyek" }}
+          id="featured-projects"
+          title="Featured projects"
+          description="A few things I've built and shipped."
+          action={{ label: "All projects", href: "/projects" }}
         />
-        {/* useSearchParams butuh Suspense; fallback = tampilan "Semua" yang identik */}
+        {/* useSearchParams needs Suspense; fallback = the identical "All" view */}
         <Suspense fallback={<FeaturedGridStatic projects={projects} counts={counts} />}>
           <FeaturedGrid projects={projects} counts={counts} />
         </Suspense>

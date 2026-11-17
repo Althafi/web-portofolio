@@ -5,30 +5,30 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Token desain — sumber: portfolio-design/theme-v2-tokens.css
- * Terang di :root, gelap di .dark (diatur next-themes).
+ * Design tokens — source: portfolio-design/theme-v2-tokens.css
+ * Light in :root, dark in .dark (managed by next-themes).
  */
 :root {
   --bg: #ffffff;
   --surface: #f4f4f5;
   --border: #e4e4e7;
   --fg: #09090b;
-  /* muted & accent sedikit digelapkan dari desain (#71717A, #2F7DB5)
-   * supaya kontras teks ≥ 4.5:1 juga di atas surface/accent-soft. */
+  /* muted & accent are slightly darker than the design (#71717A, #2F7DB5)
+   * so text contrast stays ≥ 4.5:1 on surface/accent-soft too. */
   --muted: #6b6b74;
   --accent: #2971a6;
   --accent-soft: #eaf3fa;
   --inverse-bg: #09090b;
   --inverse-fg: #fafafa;
   --dot: #d4d4d8;
-  /* Aksen di atas latar inverse (sisi belakang kartu flip) */
+  /* Accent on the inverse background (back of the flip card) */
   --accent-inverse: #7cb8e4;
 
-  /* Warna status (sama di kedua tema) */
+  /* Status colors (same in both themes) */
   --status-live: #22c55e;
   --status-progress: #e0a030;
 
-  /* Alias untuk komponen shadcn/ui */
+  /* Aliases for shadcn/ui components */
   --background: var(--bg);
   --foreground: var(--fg);
   --card: var(--bg);
@@ -67,7 +67,7 @@
 }
 
 @theme inline {
-  /* Token desain → utilitas Tailwind (bg-bg, bg-surface, text-fg, text-muted, …) */
+  /* Design tokens → Tailwind utilities (bg-bg, bg-surface, text-fg, text-muted, …) */
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-border: var(--border);
@@ -82,7 +82,7 @@
   --color-status-live: var(--status-live);
   --color-status-progress: var(--status-progress);
 
-  /* Alias shadcn/ui */
+  /* shadcn/ui aliases */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -112,7 +112,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Skala tipografi dari desain (ukuran desktop; dikecilkan di layar sempit) */
+/* Type scale from the design (desktop sizes; scaled down on narrow screens) */
 @utility text-display {
   font-size: clamp(2.5rem, 1.6rem + 3.2vw, 3.5rem); /* 56px */
   line-height: 1.1;
@@ -165,6 +165,12 @@
   body {
     @apply bg-bg text-fg antialiased;
   }
+  /* Always reserve the scrollbar's space. Without it, locking scroll (⌘K dialog,
+   * preloader) removes the scrollbar → the viewport resizes → a running View
+   * Transition is aborted ("InvalidStateError: … Viewport size changed"). */
+  html {
+    scrollbar-gutter: stable;
+  }
   ::selection {
     background: color-mix(in oklab, var(--accent) 25%, transparent);
   }
@@ -175,10 +181,10 @@
 }
 
 /* ============================================================
- * Animasi & efek (Fase 6)
+ * Animations & effects (Phase 6)
  * ============================================================ */
 
-/* (05)(12) Titik status berdenyut */
+/* (05)(12) Pulsing status dot */
 .status-dot[data-pulse]::after {
   content: "";
   position: absolute;
@@ -199,8 +205,8 @@
   }
 }
 
-/* (02) Judul hero muncul per kata: blur → tajam.
- * Ditahan selama preloader berjalan (html belum punya data-preloaded). */
+/* (02) Hero title appears word by word: blur → sharp.
+ * Held while the preloader runs (html doesn't have data-preloaded yet). */
 .hero-word {
   display: inline-block;
   animation: word-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -228,7 +234,7 @@ html:not([data-preloaded]) .hero-fade {
   }
 }
 
-/* (03) Chip mengambang pelan */
+/* (03) Slowly floating chips */
 .float-slow {
   animation: float 5s ease-in-out infinite alternate;
 }
@@ -244,7 +250,7 @@ html:not([data-preloaded]) .hero-fade {
   }
 }
 
-/* (04) Marquee tech stack, berhenti saat hover */
+/* (04) Tech stack marquee, pauses on hover */
 .marquee-track {
   animation: marquee var(--marquee-duration, 40s) linear infinite;
 }
@@ -258,7 +264,23 @@ html:not([data-preloaded]) .hero-fade {
   }
 }
 
-/* (07) Caret terminal berkedip */
+/* Detail-page showcase: slowly drifting color orbs */
+.orb-a {
+  animation: orb-drift 14s ease-in-out infinite alternate;
+}
+.orb-b {
+  animation: orb-drift 18s ease-in-out -6s infinite alternate-reverse;
+}
+@keyframes orb-drift {
+  from {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, 6%, 0) scale(1.15);
+  }
+}
+
+/* (07) Blinking terminal caret */
 .caret {
   animation: caret 1s steps(1) infinite;
 }
@@ -268,7 +290,7 @@ html:not([data-preloaded]) .hero-fade {
   }
 }
 
-/* (09) Ganti tema: lingkaran melebar (View Transitions) */
+/* (09) Theme switch: expanding circle (View Transitions) */
 html.theme-vt::view-transition-old(root),
 html.theme-vt::view-transition-new(root) {
   animation: none;
@@ -280,7 +302,7 @@ html.theme-vt::view-transition-old(root) {
 html.theme-vt::view-transition-new(root) {
   z-index: 2;
 }
-/* Cadangan untuk browser tanpa View Transitions: fade warna */
+/* Fallback for browsers without View Transitions: color fade */
 html.theme-fade *,
 html.theme-fade *::before,
 html.theme-fade *::after {
@@ -296,7 +318,7 @@ html.theme-freeze *::after {
   transition: none !important;
 }
 
-/* (10) Transisi halaman: thumbnail → showcase, konten lain fade + naik 12px */
+/* (10) Page transition: thumbnail → showcase, other content fades + rises 12px */
 ::view-transition-group(.morph) {
   animation-duration: 450ms;
   animation-timing-function: cubic-bezier(0.3, 0.9, 0.3, 1);
@@ -327,7 +349,7 @@ html.theme-freeze *::after {
   }
 }
 
-/* Header tetap diam selama transisi halaman */
+/* Header stays still during page transitions */
 ::view-transition-group(site-header) {
   animation: none;
   z-index: 10;
@@ -336,8 +358,16 @@ html.theme-vt::view-transition-group(site-header) {
   z-index: auto;
 }
 
-/* Preloader: disembunyikan untuk kunjungan berikutnya / reduced motion.
- * Selama berjalan, overlay punya layer view-transition sendiri di atas header. */
+/* Radix/react-remove-scroll adds a scrollbar-width margin to <body> when it locks
+ * scroll. With `scrollbar-gutter: stable` that space is already reserved, so the
+ * margin would shift the page left — cancel it. Unlayered + higher specificity
+ * than the injected `body[data-scroll-locked]` rule. */
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+}
+
+/* Preloader: hidden on repeat visits / reduced motion.
+ * While running, the overlay has its own view-transition layer above the header. */
 html[data-preloaded]:not([data-preloading]) .preloader {
   display: none;
 }
@@ -349,7 +379,7 @@ html[data-preloading] .logo-part {
   opacity: 0;
 }
 
-/* Semua efek mati otomatis saat prefers-reduced-motion aktif */
+/* All effects turn off automatically when prefers-reduced-motion is on */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -366,6 +396,8 @@ html[data-preloading] .logo-part {
   .marquee-track,
   .float-slow,
   .float-slow-2,
+  .orb-a,
+  .orb-b,
   .caret {
     animation: none !important;
   }

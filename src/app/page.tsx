@@ -8,7 +8,7 @@ import { getAllProjects, getCategoryCounts } from "@/lib/projects";
 
 export default function Home() {
   const projects = getAllProjects();
-  const counts = getCategoryCounts();
+  const counts = getCategoryCounts(projects);
 
   return (
     <PageTransition>

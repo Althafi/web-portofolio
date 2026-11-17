@@ -5,7 +5,7 @@ import { ProjectCard } from "@/components/project/project-card";
 import type { Project } from "@/lib/project-types";
 import { cn } from "@/lib/utils";
 
-/** (06) Grid kartu: kartu yang tersaring bergeser dengan animasi layout. */
+/** (06) Card grid: filtered cards shift with a layout animation. */
 export function AnimatedProjectGrid({
   projects,
   className,
