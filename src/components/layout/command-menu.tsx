@@ -18,7 +18,7 @@ export function useCommandMenu() {
   return useContext(CommandMenuContext);
 }
 
-// (8.3) cmdk + dialog baru diunduh saat palette pertama kali dibuka
+// (8.3) cmdk + dialog are only downloaded when the palette is first opened
 const CommandPalette = dynamic(
   () => import("@/components/layout/command-palette").then((m) => m.CommandPalette),
   { ssr: false },

@@ -1,8 +1,8 @@
 export const navLinks = [
-  { label: "Beranda", href: "/" },
-  { label: "Proyek", href: "/proyek" },
-  { label: "Tentang", href: "/tentang" },
-  { label: "Kontak", href: "/#kontak" },
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 export function isActive(pathname: string, href: string) {

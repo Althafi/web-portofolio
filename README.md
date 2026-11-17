@@ -1,6 +1,6 @@
-# Portofolio Altap
+# Portofolio Althafi Hilal Anshar
 
-Situs portofolio: aplikasi mobile, web, dan tools CLI lengkap dengan studi kasus.
+Situs portofolio: aplikasi mobile dan web lengkap dengan studi kasus.
 Dibangun dengan Next.js 16 (App Router, Cache Components), React 19, Tailwind CSS v4,
 shadcn/ui, Motion, dan MDX.
 
@@ -33,7 +33,7 @@ Kartu, halaman detail, jumlah per kategori, sitemap, OG image, dan command palet
 ikut diperbarui otomatis. Bila `status` diubah ke `released` dan `links.playStore` diisi,
 tombol "Tonton demo" otomatis berganti menjadi tombol Play Store.
 
-Frontmatter yang tersedia: lihat `src/content/projects/kasirku.mdx` sebagai contoh
+Frontmatter yang tersedia: lihat `src/content/projects/tickr.mdx` sebagai contoh
 lengkap, dan tipe `Project` di `src/lib/project-types.ts`.
 
 ## Deploy (Vercel)

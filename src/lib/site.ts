@@ -1,6 +1,6 @@
 /**
- * URL publik situs. Atur `NEXT_PUBLIC_SITE_URL` di Vercel bila memakai
- * domain kustom; tanpa itu dipakai URL produksi Vercel, lalu localhost.
+ * Public site URL. Set `NEXT_PUBLIC_SITE_URL` on Vercel when using a
+ * custom domain; otherwise the Vercel production URL is used, then localhost.
  */
 export const siteUrl = (() => {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;

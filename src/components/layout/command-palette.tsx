@@ -6,14 +6,13 @@ import {
   ArrowRight,
   AtSign,
   Copy,
-  FileDown,
+  FileText,
   FolderGit2,
   Home,
   Laptop,
   Moon,
   Smartphone,
   Sun,
-  Terminal,
   User,
 } from "lucide-react";
 import {
@@ -36,10 +35,9 @@ import type { CommandProject } from "@/components/layout/command-menu";
 const categoryIcon: Record<Category, typeof Smartphone> = {
   mobile: Smartphone,
   web: Laptop,
-  tools: Terminal,
 };
 
-/** Isi command palette ⌘K — dimuat lazy saat pertama kali dibuka. */
+/** ⌘K command palette content — lazy-loaded on first open. */
 export function CommandPalette({
   open,
   setOpen,
@@ -66,38 +64,38 @@ export function CommandPalette({
       open={open}
       onOpenChange={setOpen}
       title="Command palette"
-      description="Cari halaman, proyek, atau perintah"
+      description="Search pages, projects, or commands"
       className="sm:max-w-[560px]"
     >
       <Command loop>
-        <CommandInput placeholder="Ketik perintah atau cari proyek…" />
+        <CommandInput placeholder="Type a command or search projects…" />
         <CommandList>
-          <CommandEmpty>Tidak ada hasil.</CommandEmpty>
+          <CommandEmpty>No results.</CommandEmpty>
 
-          <CommandGroup heading="Navigasi">
+          <CommandGroup heading="Navigation">
             <CommandItem onSelect={() => run(() => router.push("/"))}>
-              <Home /> Beranda
+              <Home /> Home
             </CommandItem>
-            <CommandItem onSelect={() => run(() => router.push("/proyek"))}>
-              <FolderGit2 /> Proyek
+            <CommandItem onSelect={() => run(() => router.push("/projects"))}>
+              <FolderGit2 /> Projects
             </CommandItem>
-            <CommandItem onSelect={() => run(() => router.push("/tentang"))}>
-              <User /> Tentang
+            <CommandItem onSelect={() => run(() => router.push("/about"))}>
+              <User /> About
             </CommandItem>
-            <CommandItem onSelect={() => run(() => router.push("/#kontak"))}>
-              <AtSign /> Kontak
+            <CommandItem onSelect={() => run(() => router.push("/#contact"))}>
+              <AtSign /> Contact
             </CommandItem>
           </CommandGroup>
 
           <CommandSeparator />
-          <CommandGroup heading="Proyek">
+          <CommandGroup heading="Projects">
             {projects.map((p) => {
               const Icon = categoryIcon[p.category];
               return (
                 <CommandItem
                   key={p.slug}
                   value={`${p.title} ${p.category} ${p.stack.join(" ")}`}
-                  onSelect={() => run(() => router.push(`/proyek/${p.slug}`))}
+                  onSelect={() => run(() => router.push(`/projects/${p.slug}`))}
                 >
                   <Icon /> {p.title}
                   <CommandShortcut className="font-mono text-[11px] tracking-normal">
@@ -109,38 +107,38 @@ export function CommandPalette({
           </CommandGroup>
 
           <CommandSeparator />
-          <CommandGroup heading="Tema">
+          <CommandGroup heading="Theme">
             <CommandItem onSelect={() => run(() => setTheme("light"))}>
-              <Sun /> Tema terang
+              <Sun /> Light theme
             </CommandItem>
             <CommandItem onSelect={() => run(() => setTheme("dark"))}>
-              <Moon /> Tema gelap
+              <Moon /> Dark theme
             </CommandItem>
             <CommandItem onSelect={() => run(() => setTheme("system"))}>
-              <Laptop /> Ikuti sistem
+              <Laptop /> Use system setting
             </CommandItem>
           </CommandGroup>
 
           <CommandSeparator />
-          <CommandGroup heading="Aksi">
+          <CommandGroup heading="Actions">
             <CommandItem onSelect={() => run(copyEmail)}>
-              <Copy /> Salin email
+              <Copy /> Copy email
               <CommandShortcut className="font-mono text-[11px] tracking-normal">
                 {profile.email}
               </CommandShortcut>
             </CommandItem>
             <CommandItem onSelect={() => run(() => (window.location.href = mailto))}>
-              <ArrowRight /> Kirim email
+              <ArrowRight /> Send email
             </CommandItem>
             <CommandItem onSelect={() => run(() => window.open(profile.cv, "_blank"))}>
-              <FileDown /> Unduh CV
+              <FileText /> View CV
             </CommandItem>
             {profile.socials.map((s) => (
               <CommandItem
                 key={s.label}
                 onSelect={() => run(() => window.open(s.href, "_blank", "noopener"))}
               >
-                <ArrowRight /> Buka {s.label}
+                <ArrowRight /> Open {s.label}
               </CommandItem>
             ))}
           </CommandGroup>

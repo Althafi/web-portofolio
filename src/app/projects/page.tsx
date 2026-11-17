@@ -7,10 +7,10 @@ import { ContactCta } from "@/components/sections/contact-cta";
 import { getAllProjects, getCategoryCounts } from "@/lib/projects";
 
 export const metadata: Metadata = {
-  title: "Proyek",
+  title: "Projects",
   description:
-    "Kumpulan aplikasi mobile, web, dan tools yang pernah saya bangun — lengkap dengan studi kasusnya.",
-  alternates: { canonical: "/proyek" },
+    "A collection of mobile and web apps I've built — each with its own case study.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {
@@ -20,10 +20,9 @@ export default function ProjectsPage() {
   return (
     <PageTransition>
       <Container className="pt-14">
-        <h1 className="text-title text-fg">Proyek</h1>
+        <h1 className="text-title text-fg">Projects</h1>
         <p className="mt-1.5 text-[17px] text-muted">
-          Kumpulan aplikasi mobile, web, dan tools yang pernah saya bangun — lengkap dengan studi
-          kasusnya.
+          A collection of mobile and web apps I&apos;ve built — each with its own case study.
         </p>
         <div className="mt-[42px]">
           <Suspense fallback={<ProjectsExplorerStatic projects={projects} counts={counts} />}>
