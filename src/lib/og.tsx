@@ -7,7 +7,7 @@ export const ogSize = { width: 1200, height: 630 };
 
 const fontDir = path.join(process.cwd(), "node_modules/geist/dist/fonts");
 
-// Dibaca sinkron supaya OG image ikut diprerender saat build (Cache Components)
+// Read synchronously so the OG image is prerendered at build time (Cache Components)
 function fonts() {
   const read = (file: string) => readFileSync(path.join(fontDir, file));
   return [
@@ -32,7 +32,7 @@ function fonts() {
   ];
 }
 
-/** Gambar Open Graph bergaya desain: latar putih, blob aksen, judul besar. */
+/** Design-styled Open Graph image: white background, accent blob, large title. */
 export async function renderOg({
   eyebrow,
   title,
@@ -57,18 +57,12 @@ export async function renderOg({
         backgroundImage: "radial-gradient(circle at 85% 20%, #eaf3fa 0%, #ffffff 55%)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            background: "#2971a6",
-            borderRadius: "6px 20px 20px 20px",
-          }}
-        />
-        <div style={{ fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1 }}>
           {profile.handle}
         </div>
+        {/* Terminal cursor logo mark */}
+        <div style={{ width: 17, height: 34, background: "#2971a6", borderRadius: 3 }} />
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
         <div
