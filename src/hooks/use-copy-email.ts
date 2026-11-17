@@ -9,7 +9,7 @@ async function writeClipboard(text: string) {
     await navigator.clipboard.writeText(text);
     return;
   }
-  // Cadangan untuk browser/konteks tanpa Clipboard API
+  // Fallback for browsers/contexts without the Clipboard API
   const el = document.createElement("textarea");
   el.value = text;
   el.setAttribute("readonly", "");
@@ -21,14 +21,14 @@ async function writeClipboard(text: string) {
   el.remove();
 }
 
-/** Salin email ke clipboard lalu tampilkan toast "Tersalin!". */
+/** Copy the email to the clipboard, then show a "Copied!" toast. */
 export function useCopyEmail() {
   return useCallback(async () => {
     try {
       await writeClipboard(profile.email);
-      toast.success("Tersalin!", { description: profile.email });
+      toast.success("Copied!", { description: profile.email });
     } catch {
-      toast.error("Gagal menyalin", { description: `Salin manual: ${profile.email}` });
+      toast.error("Couldn't copy", { description: `Copy it manually: ${profile.email}` });
     }
   }, []);
 }

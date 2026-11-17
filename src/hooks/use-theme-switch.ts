@@ -7,8 +7,8 @@ import { useTheme } from "next-themes";
 type ThemeChoice = "light" | "dark" | "system";
 
 /**
- * (09) Ganti tema dengan lingkaran yang melebar dari titik asal (View Transitions API).
- * Browser lama → fade warna 300 ms. Reduced motion → langsung berganti.
+ * (09) Switch theme with a circle expanding from the origin point (View Transitions API).
+ * Older browsers → 300 ms color fade. Reduced motion → instant switch.
  */
 export function useThemeSwitch() {
   const { setTheme, resolvedTheme } = useTheme();

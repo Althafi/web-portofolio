@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Lebar konten 1120px dengan padding samping responsif. */
+/** 1120px content width with responsive side padding. */
 export function Container({
   className,
   as: Tag = "div",

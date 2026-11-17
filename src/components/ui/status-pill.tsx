@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
 type Props = React.ComponentProps<"span"> & {
-  /** `live` = hijau (tersedia/rilis), `progress` = kuning (beta, pengembangan, prototipe) */
+  /** `live` = green (available/released), `progress` = amber (beta, development, prototype) */
   tone?: "live" | "progress";
   size?: "sm" | "md";
-  /** Titik berdenyut (diaktifkan di Fase 6) */
+  /** Pulsing dot (enabled in Phase 6) */
   pulse?: boolean;
 };
 

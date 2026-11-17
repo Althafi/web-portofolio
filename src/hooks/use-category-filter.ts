@@ -2,23 +2,23 @@
 
 import { useCallback } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { categories } from "@/lib/project-types";
+import { categories, type Category } from "@/lib/project-types";
 import type { Filter } from "@/components/project/filter-tabs";
 
-const PARAM = "kategori";
+const PARAM = "category";
 
-function parse(value: string | null): Filter {
-  return value && (categories as readonly string[]).includes(value) ? (value as Filter) : "all";
+function parse(value: string | null, allowed: readonly Category[]): Filter {
+  return value && (allowed as readonly string[]).includes(value) ? (value as Filter) : "all";
 }
 
 /**
- * Filter kategori yang disimpan di URL (`?kategori=mobile`) supaya bisa dibagikan.
- * Memakai history API bawaan, yang otomatis tersinkron dengan useSearchParams.
+ * Category filter stored in the URL (`?category=mobile`) so it can be shared.
+ * Uses the native history API, which stays in sync with useSearchParams automatically.
  */
-export function useCategoryFilter() {
+export function useCategoryFilter(allowed: readonly Category[] = categories) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const filter = parse(searchParams.get(PARAM));
+  const filter = parse(searchParams.get(PARAM), allowed);
 
   const setFilter = useCallback(
     (next: Filter) => {

@@ -3,9 +3,9 @@
 import { ViewTransition } from "react";
 
 /**
- * (10) Transisi halaman: konten lama memudar, konten baru fade + naik 12px.
- * Dipasang di tiap page.tsx (bukan layout) supaya enter/exit berjalan saat navigasi.
- * Elemen bernama di dalamnya (thumbnail ↔ showcase) ikut ber-morph.
+ * (10) Page transition: old content fades out, new content fades in + rises 12px.
+ * Placed in each page.tsx (not the layout) so enter/exit runs on navigation.
+ * Named elements inside it (thumbnail ↔ showcase) morph as well.
  */
 export function PageTransition({ children }: { children: React.ReactNode }) {
   return (

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Badge kategori: latar accent-soft, teks accent, mono 11 kapital. */
+/** Category badge: accent-soft background, accent text, mono 11 uppercase. */
 export function Badge({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span

@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 const chipVariants = cva("inline-flex shrink-0 items-center whitespace-nowrap leading-none", {
   variants: {
     variant: {
-      /** Chip stack di kartu proyek */
+      /** Stack chip on project cards */
       outline: "h-6 rounded-md border border-border px-2 font-mono text-[11px] text-muted",
-      /** Chip tech stack di beranda */
+      /** Tech stack chip on the home page */
       solid: "h-[34px] rounded-lg bg-surface px-3 text-sm font-medium text-fg",
-      /** Chip di kartu tech stack halaman detail */
+      /** Chip in the detail page tech stack card */
       card: "h-7 rounded-[7px] border border-border bg-bg px-2.5 text-[13px] font-medium text-fg",
     },
   },

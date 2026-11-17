@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        // Varian desain portofolio
+        // Portfolio design variants
         primary: "bg-inverse-bg text-inverse-fg hover:bg-inverse-bg/85",
         accent: "bg-accent text-bg hover:bg-accent/85",
         outline:
@@ -28,7 +28,7 @@ const buttonVariants = cva(
         sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         icon: "size-8",
-        // Ukuran desain: tombol 44px, radius 10px, teks 15px
+        // Design sizes: 44px button, 10px radius, 15px text
         md: "h-11 gap-2 rounded-[10px] px-[18px] text-[15px]",
         "md-sm": "h-10 gap-1.5 rounded-[9px] px-4 text-sm",
         "icon-md": "size-11 rounded-[10px]",

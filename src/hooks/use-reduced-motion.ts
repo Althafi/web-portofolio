@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { useReducedMotion } from "motion/react";
 
-/** `true` bila pengguna mengaktifkan prefers-reduced-motion. */
+/** `true` when the user has prefers-reduced-motion enabled. */
 export function usePrefersReducedMotion() {
   return useReducedMotion() ?? false;
 }
@@ -19,7 +19,7 @@ function subscribeMedia(query: string) {
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 const subscribeFine = subscribeMedia(FINE_POINTER);
 
-/** `true` di perangkat dengan mouse/trackpad. Efek berat hanya aktif di sini. */
+/** `true` on devices with a mouse/trackpad. Heavy effects only run here. */
 export function useFinePointer() {
   return useSyncExternalStore(
     subscribeFine,
@@ -28,7 +28,7 @@ export function useFinePointer() {
   );
 }
 
-/** Efek interaktif berat (partikel, tilt, parallax) hanya jalan bila true. */
+/** Heavy interactive effects (particles, tilt, parallax) only run when true. */
 export function useRichMotion() {
   const reduced = usePrefersReducedMotion();
   const fine = useFinePointer();

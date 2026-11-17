@@ -3,8 +3,8 @@
 import { useEffect, type RefObject } from "react";
 
 /**
- * Menulis posisi kursor relatif terhadap elemen ke CSS variable
- * `--mx` / `--my` (px), tanpa re-render React. Dipakai spotlight & glow.
+ * Writes the cursor position relative to the element to the CSS variables
+ * `--mx` / `--my` (px), without a React re-render. Used by the spotlight & glow.
  */
 export function useMousePosition(ref: RefObject<HTMLElement | null>, enabled = true) {
   useEffect(() => {
