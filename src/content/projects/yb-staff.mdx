@@ -1,0 +1,91 @@
+---
+title: YB Staff App
+category: mobile
+summary: "A field-staff app for a cleaning service: daily job schedule, job status flow, work reports, and push notifications."
+tagline: Field staff of YukBersihin manage their daily cleaning jobs, submit final work reports, and get notified by the admin in real time.
+stack: [Flutter, Dart, Riverpod, Firebase Cloud Messaging, Laravel Sanctum]
+role: Solo mobile developer
+duration: Jun – Jul 2026
+platform: Android & iOS
+year: 2026
+status: developed
+statusNote: Internal app for a client
+logo: /images/projects/yb-staff/logo.png
+featured: true
+order: 2
+links:
+  github: https://github.com/Althafi/YB-Staff-App-Flutter
+highlights:
+  - "Browse assigned jobs by day, with pull-to-refresh and skeleton loading"
+  - "Guided job lifecycle from assigned to completed, with confirmation dialogs"
+  - "Final report with items, discount, and down payment; hourly jobs have their own report"
+  - "Push notifications with unread badge and tap-to-open navigation"
+demo:
+  video: /videos/yb-staff.mp4
+  poster: /videos/yb-staff-poster.jpg
+  chapters:
+    - { at: 0, label: Sign in }
+    - { at: 2, label: "Today's jobs" }
+    - { at: 4, label: Job details }
+    - { at: 6, label: Items & invoice }
+    - { at: 13, label: Notifications }
+    - { at: 21, label: Jobs by date }
+    - { at: 25, label: Profile & sign out }
+cover:
+  tagline: Daily jobs and invoices for field staff.
+  color: "#2D6A4F"
+  colorTo: "#51B788"
+  screens:
+    - /images/projects/yb-staff/home.jpg
+    - /images/projects/yb-staff/job-detail.jpg
+    - /images/projects/yb-staff/job-invoice.jpg
+showcase:
+  screens:
+    - /images/projects/yb-staff/notifications.jpg
+    - /images/projects/yb-staff/home.jpg
+    - /images/projects/yb-staff/job-detail.jpg
+gallery:
+  - caption: Jobs by day
+    alt: "Three YB Staff screens: the date picker, the daily job list, and the profile menu"
+    screens:
+      - /images/projects/yb-staff/date-picker.jpg
+      - /images/projects/yb-staff/home.jpg
+      - /images/projects/yb-staff/profile-menu.jpg
+  - caption: Job details & invoice
+    alt: "Three YB Staff screens: customer and location details, the final items and invoice, and an unpaid invoice"
+    screens:
+      - /images/projects/yb-staff/job-detail.jpg
+      - /images/projects/yb-staff/job-invoice.jpg
+      - /images/projects/yb-staff/job-unpaid.jpg
+  - caption: Sign-in & notifications
+    alt: "Three YB Staff screens: the staff sign-in, admin notifications, and the daily job list"
+    screens:
+      - /images/projects/yb-staff/login.jpg
+      - /images/projects/yb-staff/notifications.jpg
+      - /images/projects/yb-staff/home.jpg
+---
+
+## Problem
+
+Cleaning staff in the field need one place to see today's jobs, update their progress, and report what was actually done, instead of juggling chats and paper notes.
+
+## Solution
+
+The app talks to a Laravel REST API (Sanctum token auth, deployed on Railway). Staff see their jobs per day, open a job for customer info, contact, pricing, photos, and a Maps or WhatsApp shortcut, and move it through the status flow: assigned, in progress, awaiting verification, invoice created, completed.
+
+## Key features
+
+- Login with a token kept in secure storage, and automatic session restore on launch
+- Job detail sheet with customer info, pricing breakdown, invoice summary, photos, and notes
+- Final items report with an optional fixed discount and down payment, editable while the job is still open
+- Hourly jobs with planned versus actual duration, cleaner count, and notes
+- Profile editing with a photo from the camera or gallery, and a secure change-password flow
+- FCM push notifications, an in-app notification screen, and an offline banner
+
+## Under the hood
+
+Clean-Architecture-inspired layers (`domain`, `data`, `presentation`, `core`). Auth state is a sealed class that drives the whole UI tree, repositories return a `Result<T>` so no raw exceptions cross layers, and each date has its own auto-disposing Riverpod provider.
+
+## Status
+
+A portfolio project built against a real backend, still under active development.

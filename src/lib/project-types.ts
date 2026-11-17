@@ -1,12 +1,16 @@
 /**
- * Tipe & helper proyek yang aman dipakai di client component
- * (tanpa akses file system). Pembaca file ada di `lib/projects.ts`.
+ * Project types & helpers that are safe to use in client components
+ * (no file system access). The file reader lives in `lib/projects.ts`.
  */
 
-export const categories = ["mobile", "web", "tools"] as const;
+export const categories = ["mobile", "web"] as const;
 export type Category = (typeof categories)[number];
 
-export const statuses = ["released", "beta", "development", "prototype"] as const;
+/** Categories shown on the home page. */
+export const homeCategories: readonly Category[] = categories;
+
+/** `developed` = finished, but not (yet) published to a store. */
+export const statuses = ["released", "developed", "beta", "development", "prototype"] as const;
 export type Status = (typeof statuses)[number];
 
 export type ProjectLinks = {
@@ -18,7 +22,7 @@ export type ProjectLinks = {
 };
 
 export type DemoChapter = {
-  /** Detik dari awal video */
+  /** Seconds from the start of the video */
   at: number;
   label: string;
 };
@@ -31,6 +35,30 @@ export type ProjectDemo = {
 
 export type ProjectStat = { value: string; label: string };
 
+/**
+ * Presentation-style card cover. `screens` = [main, top-right, bottom-right];
+ * `color`/`colorTo` = the app's brand gradient (default: site accent).
+ */
+export type ProjectCover = {
+  screens: string[];
+  /** Defaults to the project's `logo` */
+  logo?: string;
+  tagline?: string;
+  color?: string;
+  colorTo?: string;
+};
+
+/**
+ * A gallery item: either one `src` image (paths in public/images), or 1–3
+ * phone `screens` [left, center, right] drawn as a device mockup.
+ */
+export type GalleryShot = {
+  alt: string;
+  src?: string;
+  screens?: string[];
+  caption?: string;
+};
+
 export type RoadmapStep = {
   label: string;
   state: "done" | "active" | "todo";
@@ -41,11 +69,11 @@ export type Project = {
   slug: string;
   title: string;
   category: Category;
-  /** Label tambahan di badge, mis. "CLI" → "TOOLS · CLI" */
+  /** Extra badge label, e.g. "Flutter" → "MOBILE · FLUTTER" */
   kind?: string;
-  /** 1–2 kalimat untuk kartu */
+  /** 1–2 sentences for the card */
   summary: string;
-  /** Kalimat pembuka di halaman detail */
+  /** Opening line on the detail page */
   tagline: string;
   stack: string[];
   role: string;
@@ -53,24 +81,31 @@ export type Project = {
   platform: string;
   year: number;
   status: Status;
-  /** Contoh: "Q1 2027" */
+  /** Overrides the status text on the detail page, e.g. "Available soon on Play Store" */
+  statusNote?: string;
+  /** App icon (square image in public/images); shown next to the title and on the cover */
+  logo?: string;
+  /** Example: "Q1 2027" */
   releaseTarget?: string;
-  /** 0–100, progres menuju rilis */
+  /** 0–100, progress toward release */
   progress?: number;
   links: ProjectLinks;
   demo?: ProjectDemo;
   stats?: ProjectStat[];
   highlights: string[];
   roadmap?: RoadmapStep[];
-  /** Isi layar HP utama di showcase halaman detail */
-  showcase?: { label: string; value: string };
-  /** Output terminal untuk thumbnail proyek CLI */
-  terminal?: string[];
-  /** Screenshot galeri (path di public/images), maks. 3 */
-  gallery?: { src: string; alt: string }[];
+  /**
+   * Detail page showcase. `screens` = three phone screenshots
+   * [left, center, right]; without them the center phone shows label/value.
+   */
+  showcase?: { label?: string; value?: string; screens?: string[] };
+  /** Card cover. Falls back to `showcase.screens`, then the phone mock. */
+  cover?: ProjectCover;
+  /** Gallery items, max. 3 */
+  gallery?: GalleryShot[];
   featured: boolean;
   order: number;
-  /** Judul bagian (h2) di MDX, untuk daftar isi */
+  /** Section headings (h2) in the MDX, for the table of contents */
   headings: { id: string; title: string }[];
 };
 
@@ -79,15 +114,21 @@ export type CategoryCounts = Record<Category | "all", number>;
 export const categoryLabels: Record<Category, string> = {
   mobile: "Mobile",
   web: "Web",
-  tools: "Tools",
 };
 
 export const statusLabels: Record<Status, string> = {
-  released: "Rilis",
-  beta: "Uji beta",
-  development: "Dalam pengembangan",
-  prototype: "Prototipe",
+  released: "Released",
+  developed: "Developed",
+  beta: "Beta testing",
+  development: "In development",
+  prototype: "Prototype",
 };
+
+/** Status pill look: finished work is green and still; work in progress is amber and pulses. */
+export function statusPillTone(status: Status) {
+  const done = status === "released" || status === "developed";
+  return { tone: done ? "live" : "progress", pulse: !done } as const;
+}
 
 export function badgeLabel(project: Pick<Project, "category" | "kind">) {
   const base = categoryLabels[project.category].toUpperCase();
@@ -98,30 +139,31 @@ export function isReleased(project: Pick<Project, "status">) {
   return project.status === "released";
 }
 
-/** Teks status lengkap, mis. "Uji beta · rilis Q1 2027". */
-export function statusText(project: Pick<Project, "status" | "releaseTarget">) {
+/** Full status text, e.g. "Beta testing · release Q1 2027", or `statusNote` if set. */
+export function statusText(project: Pick<Project, "status" | "releaseTarget" | "statusNote">) {
+  if (project.statusNote) return project.statusNote;
   const label = statusLabels[project.status];
   return project.releaseTarget && project.status !== "released"
-    ? `${label} · rilis ${project.releaseTarget}`
+    ? `${label} · release ${project.releaseTarget}`
     : label;
 }
 
 export type StoreLink = { label: string; href: string };
 
-/** Tombol tujuan untuk proyek yang sudah rilis, urut prioritas. */
+/** Destination buttons for released projects, in priority order. */
 export function storeLinks(project: Pick<Project, "links">): StoreLink[] {
   const { links } = project;
   const out: StoreLink[] = [];
   if (links.playStore) out.push({ label: "Play Store", href: links.playStore });
   if (links.appStore) out.push({ label: "App Store", href: links.appStore });
-  if (links.live) out.push({ label: "Kunjungi situs", href: links.live });
+  if (links.live) out.push({ label: "Visit site", href: links.live });
   return out;
 }
 
 /**
- * Aturan tombol (PLAN 2.5):
- * - `released` → tombol store/situs (atau GitHub bila tidak ada)
- * - status lain → "Tonton demo" (bila ada demo) + badge status
+ * Button rules (PLAN 2.5):
+ * - `released` → store/site button (or GitHub if there is none)
+ * - other statuses → "Watch demo" (if there is a demo) + status badge
  */
 export type PrimaryAction =
   { kind: "demo"; label: string } | { kind: "link"; label: string; href: string };
@@ -131,7 +173,7 @@ export function primaryAction(project: Project): PrimaryAction | null {
     const [store] = storeLinks(project);
     if (store) return { kind: "link", ...store };
   } else if (project.demo) {
-    return { kind: "demo", label: "Tonton demo" };
+    return { kind: "demo", label: "Watch demo" };
   }
   if (project.links.github) return { kind: "link", label: "GitHub", href: project.links.github };
   return null;

@@ -1,0 +1,90 @@
+---
+title: ActivaPlan
+category: mobile
+summary: "A fully offline personal-training app for home workouts, with routines, a weekly schedule, and guided sessions."
+tagline: Pick exercises by muscle and level, build routines, schedule them, and run guided workouts — all without an account or internet.
+stack: [Kotlin Multiplatform, Compose Multiplatform, Koin, DataStore, kotlinx-datetime]
+role: Solo mobile developer
+duration: Oct – Nov 2026
+platform: Android & iOS
+year: 2026
+status: developed
+statusNote: Coming soon to Google Play
+logo: /images/projects/activaplan/logo.png
+featured: true
+order: 3
+links:
+  github: https://github.com/Althafi/ActivaPlan-App-KMP
+highlights:
+  - "70 strength exercises in three modes (no equipment, push-up board, board with strap) plus 10 cardio sessions"
+  - "Routines, weekly plans, and 4-week programs with conflict detection and per-schedule reminders"
+  - "Guided sessions with countdown or rep counting, rest, pause, and a safety check"
+  - "100% offline — the app does not even declare the INTERNET permission"
+demo:
+  video: /videos/activaplan.mp4
+  poster: /videos/activaplan-poster.jpg
+  chapters:
+    - { at: 0, label: "Today's plan" }
+    - { at: 10, label: Guided session }
+    - { at: 13, label: Exercise details }
+    - { at: 22, label: Browse exercises }
+    - { at: 24, label: Routines & programs }
+    - { at: 26, label: Weekly schedule }
+cover:
+  tagline: Home workouts, planned. Fully offline.
+  color: "#E8531A"
+  colorTo: "#FF7F45"
+  screens:
+    - /images/projects/activaplan/home.png
+    - /images/projects/activaplan/session-timer.png
+    - /images/projects/activaplan/dark-explore.png
+showcase:
+  screens:
+    - /images/projects/activaplan/explore.png
+    - /images/projects/activaplan/home.png
+    - /images/projects/activaplan/session-timer.png
+gallery:
+  - caption: Plan the week
+    alt: "Three ActivaPlan screens: program templates, the routine builder, and the weekly schedule"
+    screens:
+      - /images/projects/activaplan/templates.png
+      - /images/projects/activaplan/routine-builder.png
+      - /images/projects/activaplan/schedule.png
+  - caption: Guided sessions
+    alt: "Three ActivaPlan session screens: exercise steps, the rest timer, and the workout complete summary"
+    screens:
+      - /images/projects/activaplan/exercise-detail.png
+      - /images/projects/activaplan/rest.png
+      - /images/projects/activaplan/complete.png
+  - caption: Dark mode
+    alt: "ActivaPlan in dark mode: cardio browsing, the home screen, and a session timer"
+    screens:
+      - /images/projects/activaplan/dark-explore.png
+      - /images/projects/activaplan/dark-home.png
+      - /images/projects/activaplan/dark-session.png
+---
+
+## Problem
+
+Most workout apps want an account, a subscription, and a constant connection, which is a lot to ask just to do push-ups at home.
+
+## Solution
+
+ActivaPlan keeps everything on the device. You pick exercises by muscle group and level, assemble routines, schedule them across the week, and run each session with timers, rest, and history. There is no account, no server, and no tracker.
+
+## Key features
+
+- Home screen with today's workout, this week's streak, active program progress, and template recommendations
+- Browse and filter exercises by mode, muscle, level, and keyword, with step images, tips, common mistakes, and safety notes
+- Strength, cardio, or mixed routines with estimated minutes, ready-made templates, and weekly plans
+- Walk and run sessions by segment, with heart-rate zones, sound and vibration cues, and optional GPS distance and pace
+- Session history grouped by month with Completed, Partial, and Stopped states
+- Light and dark themes, plus Indonesian and English
+
+## Under the hood
+
+Clean Architecture with MVVM. Logic, ViewModels, and UI live in `commonMain`; platform code covers reminders, permissions, GPS, cues, and the keep-screen-on flag. Rules like the session state machine, schedule conflicts, and streaks are pure functions, and an injectable `LocalClock` makes all date-dependent logic testable.
+
+## Status
+
+In active development. Most testing so far has been on Android; iOS behavior still needs to be verified on a device.

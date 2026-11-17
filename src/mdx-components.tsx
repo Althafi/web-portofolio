@@ -1,6 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 
-/** Gaya isi studi kasus (MDX) sesuai frame "Project detail". */
+/** Case study (MDX) content styles, matching the "Project detail" frame. */
 const components = {
   h2: ({ children, id }) => (
     <h2 id={id} className="mt-10 mb-3 scroll-mt-24 text-h3 text-fg first:mt-0">

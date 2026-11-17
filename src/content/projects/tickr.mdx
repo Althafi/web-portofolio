@@ -1,0 +1,89 @@
+---
+title: Tickr
+category: mobile
+summary: "An offline-first expiry tracker: log food, cosmetics, and medicine, and get reminded before they go to waste."
+tagline: Log the expiry date of anything in your fridge or cabinet — Tickr reminds you in time and shows how much you save.
+stack: [Kotlin Multiplatform, Compose Multiplatform, SQLDelight, Koin, Ktor, WorkManager]
+role: Solo mobile developer
+duration: Jun – Nov 2026
+platform: Android & iOS
+year: 2026
+status: developed
+statusNote: Coming soon to Google Play
+logo: /images/projects/tickr/logo.png
+featured: true
+order: 1
+links:
+  github: https://github.com/Althafi/Tickr-Expiring-Tracker-KMP-compose
+highlights:
+  - "Offline-first — all data stays on the device, no account or server"
+  - "Local reminders at D-7, D-3, D-1, and on the day itself"
+  - "On-device Insights: savings score, 6-month trend, streaks, and achievements"
+  - "Optional barcode auto-fill, plus JSON export and import"
+demo:
+  video: /videos/tickr.mp4
+  poster: /videos/tickr-poster.jpg
+  chapters:
+    - { at: 0, label: Home overview }
+    - { at: 4, label: Expiring items }
+    - { at: 10, label: Add an item }
+    - { at: 18, label: Pick the expiry date }
+    - { at: 22, label: Insights }
+cover:
+  tagline: Track expiry dates. Waste less.
+  color: "#0D6759"
+  colorTo: "#14A085"
+  screens:
+    - /images/projects/tickr/home.png
+    - /images/projects/tickr/insights.png
+    - /images/projects/tickr/dark-home.png
+showcase:
+  screens:
+    - /images/projects/tickr/expiring.png
+    - /images/projects/tickr/home.png
+    - /images/projects/tickr/insights.png
+gallery:
+  - caption: Track what expires
+    alt: "Three Tickr screens: the expiring items list, an item's detail, and expiry notifications"
+    screens:
+      - /images/projects/tickr/expiring.png
+      - /images/projects/tickr/item-detail.png
+      - /images/projects/tickr/notifications.png
+  - caption: Add items in seconds
+    alt: "Three Tickr screens: the add item form, the expiry date picker, and the item saved confirmation"
+    screens:
+      - /images/projects/tickr/add-item.png
+      - /images/projects/tickr/date-picker.png
+      - /images/projects/tickr/item-saved.png
+  - caption: Dark mode
+    alt: "Tickr in dark mode: the expiring list, the home screen, and insights"
+    screens:
+      - /images/projects/tickr/dark-expiring.png
+      - /images/projects/tickr/dark-home.png
+      - /images/projects/tickr/dark-insights.png
+---
+
+## Problem
+
+Food, cosmetics, and medicine quietly expire at the back of the fridge or cabinet. Most people only notice once it is already wasted.
+
+## Solution
+
+Tickr lets you log an item with its expiry date, photo, and category, then sends local reminders before it expires. Everything is stored on the device, so there is no account, login, or server to depend on. Barcode lookup is the only feature that uses the internet, and it is optional.
+
+## Key features
+
+- Home overview of items expiring soon, grouped by category, with a consumption donut and a waste trend
+- Add items with name, category, quantity, unit, expiry date, and a photo from the camera or gallery
+- Search and filter the expiry list by category, urgency, and time range
+- Insights calculated on the device: savings score, statistics, streaks, habits, tips, and achievements
+- Light, dark, and system themes, in Indonesian and English
+- Export all items and photos to one JSON file, and restore them from it
+
+## Under the hood
+
+Clean Architecture with an MVI presentation layer. Business logic, ViewModels, and UI all live in `commonMain`; platform code is limited to the database driver, photo storage, notifications, camera, and barcode scanner. Repositories expose `Flow` from SQLDelight, so every screen updates by itself when the data changes, and rules such as Insights and reminder scheduling are pure functions that are easy to test.
+
+## Status
+
+In active development. The Android app is the main target; some iOS pieces (photo picker, camera, barcode scanner) are still stubs.

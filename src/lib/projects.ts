@@ -13,9 +13,9 @@ import {
 export type { CategoryCounts };
 
 /**
- * Sumber data proyek: file MDX di `src/content/projects/`.
- * Frontmatter berisi data; isi MDX berisi studi kasus.
- * Dibaca secara sinkron supaya selesai saat prerender (build).
+ * Project data source: MDX files in `src/content/projects/`.
+ * The frontmatter holds the data; the MDX body holds the case study.
+ * Read synchronously so it finishes during prerender (build).
  */
 const PROJECTS_DIR = path.join(process.cwd(), "src/content/projects");
 
@@ -28,12 +28,16 @@ function parseProject(file: string): Project {
   const raw = fs.readFileSync(path.join(PROJECTS_DIR, file), "utf8");
   const { data, content } = matter(raw);
 
-  if (!data.title) fail(file, "`title` wajib diisi");
+  if (!data.title) fail(file, "`title` is required");
   if (!categories.includes(data.category)) {
-    fail(file, `\`category\` harus salah satu dari ${categories.join(", ")}`);
+    fail(file, `\`category\` must be one of ${categories.join(", ")}`);
   }
   if (!statuses.includes(data.status)) {
-    fail(file, `\`status\` harus salah satu dari ${statuses.join(", ")}`);
+    fail(file, `\`status\` must be one of ${statuses.join(", ")}`);
+  }
+
+  if (data.cover && !Array.isArray(data.cover.screens)) {
+    fail(file, "`cover.screens` must be a list of image paths");
   }
 
   const headings = [...content.matchAll(/^##\s+(.+)$/gm)].map((m) => ({
@@ -54,6 +58,8 @@ function parseProject(file: string): Project {
     platform: data.platform ?? "",
     year: Number(data.year),
     status: data.status,
+    statusNote: data.statusNote ? String(data.statusNote) : undefined,
+    logo: data.logo,
     releaseTarget: data.releaseTarget ? String(data.releaseTarget) : undefined,
     progress: typeof data.progress === "number" ? data.progress : undefined,
     links: data.links ?? {},
@@ -62,7 +68,7 @@ function parseProject(file: string): Project {
     highlights: data.highlights ?? [],
     roadmap: data.roadmap,
     showcase: data.showcase,
-    terminal: data.terminal,
+    cover: data.cover,
     gallery: data.gallery,
     featured: Boolean(data.featured),
     order: typeof data.order === "number" ? data.order : 99,
@@ -97,17 +103,15 @@ export function getProjectsByCategory(): Record<Category, Project[]> {
   ) as Record<Category, Project[]>;
 }
 
-export function getCategoryCounts(): CategoryCounts {
-  const all = getAllProjects();
+export function getCategoryCounts(all: Project[] = getAllProjects()): CategoryCounts {
   return {
     all: all.length,
     mobile: all.filter((p) => p.category === "mobile").length,
     web: all.filter((p) => p.category === "web").length,
-    tools: all.filter((p) => p.category === "tools").length,
   };
 }
 
-/** Proyek lain untuk bagian "Proyek lainnya" di halaman detail. */
+/** Other projects for the "More projects" section on the detail page. */
 export function getOtherProjects(slug: string, limit = 2): Project[] {
   return getAllProjects()
     .filter((p) => p.slug !== slug)
@@ -115,7 +119,7 @@ export function getOtherProjects(slug: string, limit = 2): Project[] {
     .slice(0, limit);
 }
 
-/** Komponen isi studi kasus (bagian MDX di bawah frontmatter). */
+/** Case study content component (the MDX below the frontmatter). */
 export async function loadProjectContent(slug: string) {
   const mod = await import(`@/content/projects/${slug}.mdx`);
   return mod.default as React.ComponentType;
